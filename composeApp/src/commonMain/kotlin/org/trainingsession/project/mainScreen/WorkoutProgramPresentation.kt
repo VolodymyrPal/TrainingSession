@@ -6,6 +6,5 @@ data class WorkoutProgramPresentation(
     val id: Int,
     val name: String,
     val description: String,
-    val icon: DrawableResource,
     val exercisePresentations: List<ExercisePresentation>
 )
