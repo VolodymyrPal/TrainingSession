@@ -1,6 +1,5 @@
 package org.trainingsession.project.mainScreen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -41,6 +41,9 @@ import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 import trainingsession.composeapp.generated.resources.Res
 import trainingsession.composeapp.generated.resources.arrow_back
+import trainingsession.composeapp.generated.resources.arrow_forward
+import trainingsession.composeapp.generated.resources.pause
+import trainingsession.composeapp.generated.resources.play
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,6 +52,9 @@ fun WorkoutPlayerScreen(
     program: WorkoutProgramPresentation,
     onBackClick: () -> Unit
 ) {
+
+    // Прогресс бар меняет цвет в зависимости кол-ва шагов
+
     var currentExerciseIndex by remember { mutableStateOf(0) }
     var isPaused by remember { mutableStateOf(false) }
     var timeLeft by remember { mutableStateOf(program.exercisePresentations[0].durationSeconds) }
@@ -73,28 +79,33 @@ fun WorkoutPlayerScreen(
             TopAppBar(
                 title = {
                     Text(
-                        program.name,
-                        style = MaterialTheme.typography.titleLarge
+                        modifier = Modifier.fillMaxWidth(),
+                        text = program.name,
+                        style = MaterialTheme.typography.titleLarge,
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.primary,
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
                             painter = painterResource(Res.drawable.arrow_back),
-                            "Назад"
+                            "Назад",
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface
+                    containerColor = Color.Transparent
                 )
             )
-        }
+        },
+        containerColor = Color.Transparent,
+        contentColor = Color.Transparent
     ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
                 .padding(padding)
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -106,9 +117,9 @@ fun WorkoutPlayerScreen(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+
                 LinearProgressIndicator(
-                    progress = progress,
+                    progress = { progress },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(8.dp)
@@ -133,12 +144,12 @@ fun WorkoutPlayerScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Icon(
-                        painter = painterResource(program.icon),
-                        contentDescription = null,
-                        modifier = Modifier.size(72.dp),
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
+//                    Icon(
+//                        painter = painterResource(program.icon),
+//                        contentDescription = null,
+//                        modifier = Modifier.size(72.dp),
+//                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+//                    )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = currentExercise.name,
@@ -187,7 +198,8 @@ fun WorkoutPlayerScreen(
                     Icon(
                         painterResource(Res.drawable.arrow_back),
                         "Назад",
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.fillMaxSize(),
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
 
@@ -196,11 +208,11 @@ fun WorkoutPlayerScreen(
                     modifier = Modifier.size(80.dp)
                 ) {
                     Icon(
-                        if (isPaused) painterResource(Res.drawable.arrow_back) else painterResource(
-                            Res.drawable.arrow_back
-                        ),
+                        if (!isPaused) painterResource(Res.drawable.pause)
+                        else painterResource(Res.drawable.play),
                         if (isPaused) "Играть" else "Пауза",
-                        modifier = Modifier.size(40.dp)
+                        modifier = Modifier.fillMaxSize(),
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
 
@@ -216,9 +228,10 @@ fun WorkoutPlayerScreen(
                     modifier = Modifier.size(64.dp)
                 ) {
                     Icon(
-                        painterResource(Res.drawable.arrow_back),
+                        painterResource(Res.drawable.arrow_forward),
                         "Следующее",
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.fillMaxSize(),
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }
