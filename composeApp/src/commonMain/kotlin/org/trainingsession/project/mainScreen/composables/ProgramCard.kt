@@ -29,6 +29,7 @@ fun ProgramCard(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(),
+        onClick = onStartClick,
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
@@ -38,10 +39,7 @@ fun ProgramCard(
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
-                .clickable {
-                    onStartClick()
-                },
+                .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
