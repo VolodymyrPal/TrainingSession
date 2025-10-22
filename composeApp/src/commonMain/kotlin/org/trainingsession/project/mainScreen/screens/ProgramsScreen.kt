@@ -18,6 +18,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
+import org.trainingsession.project.mainScreen.composables.ExercisePresentation
+import org.trainingsession.project.mainScreen.composables.ProgramCard
+import org.trainingsession.project.mainScreen.composables.WorkoutProgramPresentation
+import trainingsession.composeapp.generated.resources.Res
+import trainingsession.composeapp.generated.resources.select_program
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,8 +37,8 @@ fun ProgramSelectionScreen(
         topBar = {
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = "Выбери тренировку",
-                style = MaterialTheme.typography.headlineMedium,
+                text = stringResource(Res.string.select_program),
+                style = MaterialTheme.typography.displaySmall,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.primary
