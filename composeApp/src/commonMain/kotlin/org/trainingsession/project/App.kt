@@ -17,12 +17,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.core.context.startKoin
+import org.koin.core.module.dsl.viewModel
+import org.koin.dsl.module
 import org.trainingsession.project.mainScreen.AppRoutes
-import org.trainingsession.project.mainScreen.ExercisePresentation
-import org.trainingsession.project.mainScreen.ProgramSelectionScreen
-import org.trainingsession.project.mainScreen.WorkoutPlayerScreen
-import org.trainingsession.project.mainScreen.WorkoutProgramPresentation
+import org.trainingsession.project.mainScreen.composables.ExercisePresentation
+import org.trainingsession.project.mainScreen.composables.WorkoutProgramPresentation
+import org.trainingsession.project.mainScreen.screens.ProgramSelectionScreen
+import org.trainingsession.project.mainScreen.screens.WorkoutPlayerScreen
 import org.trainingsession.project.mainScreen.theme.AppTheme
+import org.trainingsession.project.mainScreen.viewModels.ProgramsScreenViewModel
 
 @Composable
 @Preview
@@ -96,4 +100,12 @@ fun App() {
             }
         }
     }
+}
+
+fun initKoin() = startKoin {
+    modules(appModule)
+}
+
+val appModule = module {
+    viewModel { ProgramsScreenViewModel() }
 }
