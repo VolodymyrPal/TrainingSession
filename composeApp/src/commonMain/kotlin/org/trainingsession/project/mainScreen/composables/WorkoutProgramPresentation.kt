@@ -1,6 +1,4 @@
-package org.trainingsession.project.mainScreen
-
-import org.jetbrains.compose.resources.DrawableResource
+package org.trainingsession.project.mainScreen.composables
 
 data class WorkoutProgramPresentation(
     val id: Int,

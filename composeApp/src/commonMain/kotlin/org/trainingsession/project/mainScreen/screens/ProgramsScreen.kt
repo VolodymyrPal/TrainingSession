@@ -1,4 +1,4 @@
-package org.trainingsession.project.mainScreen
+package org.trainingsession.project.mainScreen.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues

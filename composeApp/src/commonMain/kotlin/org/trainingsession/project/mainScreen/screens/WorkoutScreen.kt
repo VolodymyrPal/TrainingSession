@@ -1,4 +1,4 @@
-package org.trainingsession.project.mainScreen
+package org.trainingsession.project.mainScreen.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
+import org.trainingsession.project.mainScreen.composables.WorkoutProgramPresentation
 import trainingsession.composeapp.generated.resources.Res
 import trainingsession.composeapp.generated.resources.arrow_back
 import trainingsession.composeapp.generated.resources.arrow_forward
@@ -90,7 +91,7 @@ fun WorkoutPlayerScreen(
                     IconButton(onClick = onBackClick) {
                         Icon(
                             painter = painterResource(Res.drawable.arrow_back),
-                            "Назад",
+                            "Previous",
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }

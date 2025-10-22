@@ -1,4 +1,4 @@
-package org.trainingsession.project.mainScreen
+package org.trainingsession.project.mainScreen.composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

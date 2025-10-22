@@ -1,4 +1,4 @@
-package org.trainingsession.project.mainScreen
+package org.trainingsession.project.mainScreen.composables
 
 data class ExercisePresentation(
     val name: String,
