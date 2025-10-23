@@ -20,6 +20,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
+import org.trainingsession.project.actual.AppLogger
 import org.trainingsession.project.mainScreen.AppRoutes
 import org.trainingsession.project.mainScreen.composables.ExercisePresentation
 import org.trainingsession.project.mainScreen.composables.WorkoutProgramPresentation
@@ -31,6 +32,7 @@ import org.trainingsession.project.mainScreen.viewModels.ProgramsScreenViewModel
 @Composable
 @Preview
 fun App() {
+    AppLogger.d("Logger-Android", "Started")
 
     val theme = remember { mutableStateOf(false) }
     val navController = rememberNavController()
