@@ -11,7 +11,6 @@ fun main() = application {
         onCloseRequest = ::exitApplication,
         title = "TrainingSession",
     ) {
-        AppLogger.d("Logger-IOS", "Started")
         App()
     }
 }
