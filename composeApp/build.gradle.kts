@@ -24,11 +24,22 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+            binaryOptions["bundleId"] = "org.trainingsession.project"
         }
     }
     
     jvm()
-    
+
+    targets.configureEach {
+        compilations.configureEach {
+            compileTaskProvider.configure {
+                compilerOptions {
+                    freeCompilerArgs.addAll("-Xexpect-actual-classes")
+                }
+            }
+        }
+    }
+
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
