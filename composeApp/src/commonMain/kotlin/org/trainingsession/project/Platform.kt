@@ -1,7 +1,5 @@
 package org.trainingsession.project
 
-interface Platform {
+expect class Platform() {
     val name: String
 }
-
-expect fun getPlatform(): Platform
