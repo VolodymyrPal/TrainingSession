@@ -31,6 +31,7 @@ import org.trainingsession.project.mainScreen.theme.AppTheme
 fun App() {
     val platform : Platform = koinInject()
     AppLogger.d("${platform.name}", "Was initialized")
+    someWork()
 
     val theme = remember { mutableStateOf(false) }
     val navController = rememberNavController()
