@@ -1,7 +1,6 @@
-package org.trainingsession.project.mainScreen
+package org.trainingsession.project.presentation
 
 import kotlinx.serialization.Serializable
-
 
 @Serializable
 sealed interface AppRoutes {
