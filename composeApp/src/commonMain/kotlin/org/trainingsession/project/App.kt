@@ -18,13 +18,13 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
-import org.trainingsession.project.actual.AppLogger
-import org.trainingsession.project.mainScreen.AppRoutes
-import org.trainingsession.project.mainScreen.composables.ExercisePresentation
-import org.trainingsession.project.mainScreen.composables.WorkoutProgramPresentation
-import org.trainingsession.project.mainScreen.screens.ProgramSelectionScreen
-import org.trainingsession.project.mainScreen.screens.WorkoutPlayerScreen
-import org.trainingsession.project.mainScreen.theme.AppTheme
+import org.trainingsession.project.utils.AppLogger
+import org.trainingsession.project.presentation.AppRoutes
+import org.trainingsession.project.presentation.composables.ExercisePresentation
+import org.trainingsession.project.presentation.composables.WorkoutProgramPresentation
+import org.trainingsession.project.presentation.screens.ProgramSelectionScreen
+import org.trainingsession.project.presentation.screens.WorkoutPlayerScreen
+import org.trainingsession.project.presentation.theme.AppTheme
 
 @Composable
 @Preview

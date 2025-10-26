@@ -1,4 +1,4 @@
-package org.trainingsession.project.mainScreen.screens
+package org.trainingsession.project.presentation.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,9 +19,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
-import org.trainingsession.project.mainScreen.composables.ExercisePresentation
-import org.trainingsession.project.mainScreen.composables.ProgramCard
-import org.trainingsession.project.mainScreen.composables.WorkoutProgramPresentation
+import org.trainingsession.project.presentation.composables.ExercisePresentation
+import org.trainingsession.project.presentation.composables.ProgramCard
+import org.trainingsession.project.presentation.composables.WorkoutProgramPresentation
 import trainingsession.composeapp.generated.resources.Res
 import trainingsession.composeapp.generated.resources.select_program
 

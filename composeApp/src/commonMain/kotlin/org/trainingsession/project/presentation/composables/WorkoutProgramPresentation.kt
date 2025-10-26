@@ -1,4 +1,4 @@
-package org.trainingsession.project.mainScreen.composables
+package org.trainingsession.project.presentation.composables
 
 data class WorkoutProgramPresentation(
     val id: Int,

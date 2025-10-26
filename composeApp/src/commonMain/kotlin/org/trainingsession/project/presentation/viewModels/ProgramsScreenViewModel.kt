@@ -1,4 +1,4 @@
-package org.trainingsession.project.mainScreen.viewModels
+package org.trainingsession.project.presentation.viewModels
 
 import androidx.lifecycle.ViewModel
 

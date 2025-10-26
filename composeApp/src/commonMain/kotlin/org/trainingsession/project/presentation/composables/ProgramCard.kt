@@ -1,6 +1,5 @@
-package org.trainingsession.project.mainScreen.composables
+package org.trainingsession.project.presentation.composables
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

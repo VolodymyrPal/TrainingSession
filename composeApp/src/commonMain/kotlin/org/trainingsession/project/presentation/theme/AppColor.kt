@@ -1,4 +1,4 @@
-package org.trainingsession.project.mainScreen.theme
+package org.trainingsession.project.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
