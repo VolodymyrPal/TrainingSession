@@ -1,4 +1,4 @@
-package org.trainingsession.project.actual
+package org.trainingsession.project.utils
 
 import java.util.logging.Level
 import java.util.logging.Logger

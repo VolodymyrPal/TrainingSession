@@ -1,4 +1,4 @@
-package org.trainingsession.project.actual
+package org.trainingsession.project.utils
 
 expect object AppLogger {
     fun e(tag: String, message: String, throwable: Throwable?)
