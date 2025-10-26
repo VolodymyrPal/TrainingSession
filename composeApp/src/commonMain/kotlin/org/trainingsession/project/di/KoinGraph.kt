@@ -18,8 +18,12 @@ fun initKoin(config: KoinAppDeclaration? = null) {
     }
 }
 
-fun initKoin() = startKoin {
-    modules(appModule, commonModule)
+
+@Module
+class CommonModule {
+
+    @Single
+    fun platform(): Platform = Platform()
 }
 
 val commonModule = module {
