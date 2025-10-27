@@ -18,20 +18,19 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
-import org.trainingsession.project.utils.AppLogger
 import org.trainingsession.project.presentation.AppRoutes
-import org.trainingsession.project.presentation.composables.ExercisePresentation
-import org.trainingsession.project.presentation.composables.WorkoutProgramPresentation
+import org.trainingsession.project.presentation.models.ExercisePresentation
+import org.trainingsession.project.presentation.models.WorkoutProgramPresentation
 import org.trainingsession.project.presentation.screens.ProgramSelectionScreen
 import org.trainingsession.project.presentation.screens.WorkoutPlayerScreen
 import org.trainingsession.project.presentation.theme.AppTheme
+import org.trainingsession.project.utils.AppLogger
 
 @Composable
 @Preview
 fun App() {
-    val platform : Platform = koinInject()
-    AppLogger.d("${platform.name}", "Was initialized")
-    someWork()
+    val platform: Platform = koinInject()
+    AppLogger.d(platform.name, "Was initialized")
 
     val theme = remember { mutableStateOf(false) }
     val navController = rememberNavController()
