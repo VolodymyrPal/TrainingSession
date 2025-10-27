@@ -4,10 +4,11 @@ import ComposeApp
 @main
 struct iOSApp: App {
     init() {
-        // KoinGraphKt.doInitKoin()
-        Platform_iosKt.setNativeWorkLambda {
-            NativeActionBridge.doWork()
-        }
+        let deps = IOSDependenciesImpl()
+        KoinGraphKt.doInitKoinWithIos(
+            config: nil,
+            iosDependencies: deps
+        )
     }
 
     var body: some Scene {
@@ -15,4 +16,7 @@ struct iOSApp: App {
             ContentView()
         }
     }
+}
+
+public class IOSDependenciesImpl: NSObject, IOSDependencies {
 }
