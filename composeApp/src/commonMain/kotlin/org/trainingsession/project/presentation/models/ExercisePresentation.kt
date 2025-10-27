@@ -1,4 +1,4 @@
-package org.trainingsession.project.presentation.composables
+package org.trainingsession.project.presentation.models
 
 data class ExercisePresentation(
     val name: String,

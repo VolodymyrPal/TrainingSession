@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
-import org.trainingsession.project.presentation.composables.WorkoutProgramPresentation
+import org.trainingsession.project.presentation.models.WorkoutProgramPresentation
 import trainingsession.composeapp.generated.resources.Res
 import trainingsession.composeapp.generated.resources.arrow_back
 import trainingsession.composeapp.generated.resources.arrow_forward
