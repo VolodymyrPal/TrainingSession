@@ -12,7 +12,3 @@ private var nativeWorkLambda: (() -> Unit)? = null
 fun setNativeWorkLambda(lambda: () -> Unit) {
     nativeWorkLambda = lambda
 }
-actual fun someWork() {
-
-    nativeWorkLambda?.invoke()
-}

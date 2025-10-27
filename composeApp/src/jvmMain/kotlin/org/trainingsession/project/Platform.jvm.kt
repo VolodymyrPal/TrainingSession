@@ -4,6 +4,3 @@ actual class Platform actual constructor() {
     actual val name: String = "Java ${System.getProperty("java.version")}"
 }
 
-actual fun someWork() {
-    println("Work work work")
-}
