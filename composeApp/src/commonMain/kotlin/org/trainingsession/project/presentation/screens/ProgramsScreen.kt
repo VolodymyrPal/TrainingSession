@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,18 +20,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
-import org.trainingsession.project.presentation.composables.ExercisePresentation
+import org.koin.compose.viewmodel.koinViewModel
 import org.trainingsession.project.presentation.composables.ProgramCard
-import org.trainingsession.project.presentation.composables.WorkoutProgramPresentation
+import org.trainingsession.project.presentation.models.ExercisePresentation
+import org.trainingsession.project.presentation.models.WorkoutProgramPresentation
+import org.trainingsession.project.presentation.viewModels.ProgramsScreenViewModel
+import org.trainingsession.project.utils.AppLogger
 import trainingsession.composeapp.generated.resources.Res
 import trainingsession.composeapp.generated.resources.select_program
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProgramSelectionScreen(
-    onProgramSelected: (WorkoutProgramPresentation) -> Unit
+    onProgramSelected: (WorkoutProgramPresentation) -> Unit,
+    viewModel: ProgramsScreenViewModel = koinViewModel<ProgramsScreenViewModel>()
 ) {
     val programs = remember { programs }
+
+    LaunchedEffect(Unit) {
+        AppLogger.d("Programs from viewModel", "${viewModel.getPrograms()}")
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
