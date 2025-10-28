@@ -1,21 +1,17 @@
 package org.trainingsession.project.di
 
+import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.KoinApplication
 import org.koin.core.annotation.Module
-import org.koin.core.annotation.Single
-import org.koin.core.module.dsl.singleOf
-import org.koin.core.module.dsl.viewModelOf
+import org.koin.core.logger.Level
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
-import org.koin.ksp.generated.module
 import org.koin.ksp.generated.startKoin
-import org.trainingsession.project.Platform
-import org.trainingsession.project.presentation.viewModels.ProgramsScreenViewModel
 
 fun initKoin(config: KoinAppDeclaration? = null) {
     MyApp.startKoin {
+        printLogger(Level.DEBUG)
         config?.invoke(this)
-        modules(commonModule, CommonModule().module)
     }
 }
 
