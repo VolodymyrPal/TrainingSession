@@ -25,10 +25,15 @@ class CommonModule {
 
 }
 
-val commonModule = module {
-    viewModelOf(::ProgramsScreenViewModel)
-    singleOf(::Platform)
+expect class NativeModuleD() {
+//    @Factory
+//    fun providesPlatformComponentD(scope : Scope) : PlatformComponentD
 }
+
+//interface PlatformComponentD {
+//    fun sayHello() : String
+//}
+
 
 fun initKoinWithIos(config: KoinAppDeclaration? = null, iosDependencies: IOSDependencies) {
     initKoin {
