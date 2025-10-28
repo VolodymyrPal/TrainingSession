@@ -19,10 +19,10 @@ fun initKoin(config: KoinAppDeclaration? = null) {
 object MyApp
 
 @Module
+@ComponentScan("org.trainingsession.project")
 class CommonModule {
 
-    @Single
-    fun platform(): Platform = Platform()
+
 }
 
 val commonModule = module {
