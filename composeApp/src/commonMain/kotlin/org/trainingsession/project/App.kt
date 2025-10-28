@@ -29,7 +29,7 @@ import org.trainingsession.project.utils.AppLogger
 @Composable
 @Preview
 fun App() {
-    val platform: Platform = koinInject()
+    val platform = koinInject<Platform>()
     AppLogger.d(platform.name, "Was initialized")
 
     val theme = remember { mutableStateOf(false) }
