@@ -56,14 +56,15 @@ class CommonModule {
 
 }
 
+@Module
 expect class NativeModuleD() {
-//    @Factory
-//    fun providesPlatformComponentD(scope : Scope) : PlatformComponentD
+    @Factory
+    fun providesPlatformComponentSample(scope: Scope): PlatformComponentSample
 }
 
-//interface PlatformComponentD {
-//    fun sayHello() : String
-//}
+interface PlatformComponentSample {
+
+}
 
 
 fun initKoinWithIos(config: KoinAppDeclaration? = null, iosDependencies: IOSDependencies) {
