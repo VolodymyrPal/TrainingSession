@@ -6,11 +6,10 @@ import org.koin.core.scope.Scope
 
 @Module
 actual class NativeModuleD {
-//    @Factory
-//    actual fun providesPlatformComponentD(scope: Scope): PlatformComponentD =
-//        PlatformComponentDiOS()
+    @Factory
+    actual fun providesPlatformComponentSample(scope: Scope): PlatformComponentSample =
+        PlatformComponentDiOS()
 }
-//
-//class PlatformComponentDiOS : PlatformComponentD {
-//    override fun sayHello(): String = "I'm iOS - D"
-//}
+
+class PlatformComponentDiOS : PlatformComponentSample {
+}
