@@ -8,5 +8,7 @@ sealed interface AppRoutes {
     object ProgramListScreen : AppRoutes
 
     @Serializable
-    object ChosenProgramScreen : AppRoutes
+    data class ChosenProgramScreen (
+        val program: Int
+    ) : AppRoutes
 }
