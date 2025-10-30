@@ -1,10 +1,22 @@
 package org.trainingsession.project.domain.models
 
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
+
 data class Program(
     val id: Int,
     val name: String,
     val description: String,
-    val exercisePresentations: List<Exercise>
+    val programExercises: List<ProgramExercise>,
+
+    val exerciseType: String = "Base program",
+    val uxRecommendation: String = "Mate it slow",
+    val programGoal: String = "",
+    val durationTotal: Duration = 9.minutes,
+    val restInterval: Duration = 15.seconds,
+)
+
 fun providePrograms(): List<Program> {
     return listOf(program1, program2, program3)
 }
