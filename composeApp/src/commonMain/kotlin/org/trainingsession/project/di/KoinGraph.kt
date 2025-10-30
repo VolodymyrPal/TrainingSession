@@ -18,14 +18,6 @@ import org.koin.dsl.module
 import org.koin.ksp.generated.startKoin
 import org.trainingsession.project.utils.MyKtorLogger
 
-
-fun initKoin(config: KoinAppDeclaration? = null) {
-    MyApp.startKoin {
-        printLogger(Level.DEBUG)
-        config?.invoke(this)
-    }
-}
-
 @KoinApplication(modules = [CommonModule::class])
 object MyApp
 
@@ -47,7 +39,6 @@ class CommonModule {
                     ignoreUnknownKeys = true
                     encodeDefaults = true
                     prettyPrint = true
-                    isLenient = true  //TODO lenient for testing
                 }
             )
         }
@@ -66,6 +57,12 @@ interface PlatformComponentSample {
 
 }
 
+fun initKoin(config: KoinAppDeclaration? = null) {
+    MyApp.startKoin {
+        printLogger(Level.DEBUG)
+        config?.invoke(this)
+    }
+}
 
 fun initKoinWithIos(config: KoinAppDeclaration? = null, iosDependencies: IOSDependencies) {
     initKoin {
