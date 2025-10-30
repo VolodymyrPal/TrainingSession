@@ -37,22 +37,34 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
-import org.trainingsession.project.presentation.models.WorkoutProgramPresentation
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
+import org.trainingsession.project.domain.models.provideRandomProgram
+import org.trainingsession.project.presentation.models.toPresentation
+import org.trainingsession.project.presentation.viewModels.ExerciseScreenViewModel
 import trainingsession.composeapp.generated.resources.Res
 import trainingsession.composeapp.generated.resources.arrow_back
 import trainingsession.composeapp.generated.resources.arrow_forward
 import trainingsession.composeapp.generated.resources.pause
 import trainingsession.composeapp.generated.resources.play
+import kotlin.time.Duration
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WorkoutPlayerScreen(
-    program: WorkoutProgramPresentation,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    viewModel: ExerciseScreenViewModel = koinViewModel(
+        parameters = { parametersOf(1) }
+    )
 ) {
+
+    val screenState = viewModel.state.collectAsStateWithLifecycle()
+    val program =
+        screenState.value.chosenProgram?.toPresentation() ?: provideRandomProgram().toPresentation()
 
     // Прогресс бар меняет цвет в зависимости кол-ва шагов
 
@@ -81,9 +93,9 @@ fun WorkoutPlayerScreen(
                 title = {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = program.name,
+                        text = screenState.value.programName,
                         style = MaterialTheme.typography.titleLarge,
-                        textAlign = TextAlign.Center,
+                        textAlign = TextAlign.Start,
                         color = MaterialTheme.colorScheme.primary,
                     )
                 },
@@ -240,6 +252,19 @@ fun WorkoutPlayerScreen(
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
+}
+
+@Composable
+fun ProgressRow(
+    list: List<StepProgress>,
+    restInterval: Duration,
+    current: Int
+) {
+
+}
+
+interface StepProgress {
+    val duration: Duration
 }
 
 fun formatTime(seconds: Int): String {
