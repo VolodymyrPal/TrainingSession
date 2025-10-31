@@ -1,5 +1,8 @@
 package org.trainingsession.project.presentation.screens
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,6 +46,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.trainingsession.project.domain.models.provideRandomProgram
+import org.trainingsession.project.presentation.composables.SequentialProgressView
 import org.trainingsession.project.presentation.models.toPresentation
 import org.trainingsession.project.presentation.viewModels.ExerciseScreenViewModel
 import trainingsession.composeapp.generated.resources.Res
@@ -51,6 +55,7 @@ import trainingsession.composeapp.generated.resources.arrow_forward
 import trainingsession.composeapp.generated.resources.pause
 import trainingsession.composeapp.generated.resources.play
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -125,6 +130,10 @@ fun WorkoutPlayerScreen(
         ) {
             // Прогресс-бар
             Column(modifier = Modifier.fillMaxWidth()) {
+                ProgressRow(
+                    list = emptyList(),
+                    current = 0
+                )
                 Text(
                     text = "Упражнение ${currentExerciseIndex + 1} из $totalExercises",
                     style = MaterialTheme.typography.bodyMedium,
@@ -257,10 +266,38 @@ fun WorkoutPlayerScreen(
 @Composable
 fun ProgressRow(
     list: List<StepProgress>,
-    restInterval: Duration,
+    restInterval: Duration = 10.seconds,
     current: Int
 ) {
+    var currentStepIndex by remember { mutableStateOf(0) }
+    var currentStepProgress by remember { mutableStateOf(0f) }
+    val progressAnimatable = remember { Animatable(0f) }
+    val dataLength = 10
 
+    LaunchedEffect(currentStepIndex) {
+        progressAnimatable.animateTo(0f)
+        progressAnimatable.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(
+                durationMillis = 2000,
+                delayMillis = 0,
+                easing = LinearEasing
+            )
+        ) {
+            currentStepProgress = value // Обновляем прогресс во время анимации
+        }
+        currentStepProgress = 0f
+        currentStepIndex = (currentStepIndex + 1) % dataLength
+    }
+
+    SequentialProgressView(
+        modifier = Modifier,
+        dataLength = dataLength,
+        currentStepIndex = currentStepIndex,
+        currentStepProgress = currentStepProgress, // <-- Передаем прогресс
+        previewCountRight = 2,
+        previewCountLeft = 0
+    )
 }
 
 interface StepProgress {
