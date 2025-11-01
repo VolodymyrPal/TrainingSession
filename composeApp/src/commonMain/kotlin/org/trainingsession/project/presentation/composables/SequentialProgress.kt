@@ -139,49 +139,48 @@ class SequentialProgressState<T : Stepper>(val steps: List<T>, initialStepIndex:
 
 @Composable
 fun <T : Stepper> SequentialProgressView(
-    steps: List<T>,
-    currentStepIndex: Int,
-    isPlaying: Boolean,
-    onStepComplete: () -> Unit = {},
+    state: SequentialProgressState<T>,
     previewCountRight: Int = 2,
     previewCountLeft: Int = 1,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onStepStart: ((T, Int) -> Unit)? = null,
+    onStepComplete: ((T, Int) -> Unit)? = null,
+    onStepChange: ((T?, Int) -> Unit)? = null,
+    onProgressUpdate: ((T, Int, Float) -> Unit)? = null,
+    onAllStepsComplete: (() -> Unit)? = null
 ) {
-    var internalProgress by remember { mutableStateOf(0f) }
-    var elapsedTime by remember(currentStepIndex) { mutableStateOf(0L) }
-    val progressAnimatable = remember { Animatable(0f) }
-    val progress: Float by progressAnimatable.asState()
 
-    LaunchedEffect(currentStepIndex) {
-        progressAnimatable.snapTo(0f)
-        internalProgress = 0f
-        elapsedTime = 0L
-    }
+    LaunchedEffect(state.currentStepIndex) {
+        val stepIndex = state.currentStepIndex
+        val currentStep = state.currentStepData
+        if (currentStep == null || currentStep.durationMS <= 0L) {
+            if (currentStep != null) state.onStepComplete()
+            return@LaunchedEffect
+        }
 
-    LaunchedEffect(currentStepIndex, isPlaying) {
-        if (isPlaying && currentStepIndex < steps.size) {
-            val currentStep = steps[currentStepIndex]
-            val totalDuration = currentStep.duration
-            val remainingTime = totalDuration - elapsedTime
+        snapshotFlow { state.isPlaying }.collect { isPlaying ->
+            if (isPlaying) {
+                val duration = currentStep.durationMS
+                onStepStart?.invoke(currentStep, stepIndex)
+                var elapsedTime = state.getElapsedTime(stepIndex)
+                val startTime = withFrameNanos { it } - (elapsedTime * 1_000_000)
+                while (elapsedTime < duration && state.isPlaying && state.currentStepIndex == stepIndex) {
+                    val frameTime = withFrameNanos { it }
+                    val newElapsedTime = (frameTime - startTime) / 1_000_000
+                    val progress = newElapsedTime.toFloat() / duration.toFloat()
+                    state.setElapsedTime(stepIndex, newElapsedTime)
+                    state.setProgress(stepIndex, progress)
+                    elapsedTime = newElapsedTime
+                    onProgressUpdate?.invoke(currentStep, stepIndex, progress)
+                }
 
-            progressAnimatable.snapTo(internalProgress)
-
-            progressAnimatable.animateTo(
-                targetValue = 1f,
-                animationSpec = tween(
-                    durationMillis = remainingTime.toInt(),
-                    easing = LinearEasing
-                )
-            ) {
-                internalProgress = value
-                elapsedTime = (totalDuration * value).toLong().coerceAtMost(totalDuration)
+                if (state.currentStepIndex == stepIndex && state.currentStepElapsedTime >= duration) {
+                    state.setProgress(stepIndex, 1f)
+                    onStepComplete?.invoke(currentStep, stepIndex)
+                    if (!state.hasNextStep) onAllStepsComplete?.invoke()
+                    state.onStepComplete()
+                }
             }
-
-            if (progressAnimatable.value >= 1f) {
-                onStepComplete()
-            }
-        } else {
-            progressAnimatable.stop()
         }
     }
 
