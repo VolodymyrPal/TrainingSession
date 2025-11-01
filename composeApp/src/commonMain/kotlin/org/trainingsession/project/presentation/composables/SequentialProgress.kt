@@ -186,8 +186,7 @@ fun <T : Stepper> SequentialProgressView(
 
     Row(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp),
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -195,12 +194,13 @@ fun <T : Stepper> SequentialProgressView(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            (0 until currentStepIndex).forEach { index ->
-                val toShow = index >= currentStepIndex - previewCountLeft
+            (0 until state.currentStepIndex).forEach { index ->
+                val toShow = index >= state.currentStepIndex - previewCountLeft
+                val isStepComplete = state.getProgress(index) >= 1f
 
                 key(index) {
                     ProgressDot(
-                        isCompleted = true,
+                        isCompleted = isStepComplete,
                         toShow = toShow,
                         modifier = Modifier.animateContentSize()
                     )
@@ -208,9 +208,9 @@ fun <T : Stepper> SequentialProgressView(
             }
         }
 
-        if (steps.isNotEmpty() && currentStepIndex < steps.size) { // Добавлена проверка, чтобы не рисовать коннектор, если все шаги пройдены
+        if (state.totalSteps > 0 && state.currentStepIndex < state.totalSteps) {
             ProgressConnector(
-                progress = progress,
+                progress = state.currentStepProgress,
                 modifier = Modifier.weight(1f)
             )
         }
@@ -219,15 +219,16 @@ fun <T : Stepper> SequentialProgressView(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            (currentStepIndex until steps.size).forEach { index ->
-                val isCurrent = index == currentStepIndex
-                val isUpcomingCircle = index > currentStepIndex &&
-                        index <= currentStepIndex + previewCountRight
+            (state.currentStepIndex until state.totalSteps).forEach { index ->
+                val isCurrent = index == state.currentStepIndex
+                val isUpcomingCircle = index > state.currentStepIndex &&
+                        index <= state.currentStepIndex + previewCountRight
                 val toShow = isCurrent || isUpcomingCircle
+                val isStepComplete = state.getProgress(index) >= 1f
 
                 key(index) {
                     ProgressDot(
-                        isCompleted = false,
+                        isCompleted = isStepComplete,
                         toShow = toShow,
                         modifier = Modifier.animateContentSize()
                     )
