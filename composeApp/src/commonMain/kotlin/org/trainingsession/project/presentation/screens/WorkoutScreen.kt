@@ -1,8 +1,5 @@
 package org.trainingsession.project.presentation.screens
 
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,7 +16,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -27,26 +23,21 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
-import org.trainingsession.project.domain.models.provideRandomProgram
+import org.trainingsession.project.presentation.composables.SequentialProgressState
 import org.trainingsession.project.presentation.composables.SequentialProgressView
+import org.trainingsession.project.presentation.composables.Stepper
+import org.trainingsession.project.presentation.composables.rememberSequentialProgressState
 import org.trainingsession.project.presentation.models.toPresentation
 import org.trainingsession.project.presentation.viewModels.ExerciseScreenViewModel
 import trainingsession.composeapp.generated.resources.Res
@@ -54,8 +45,6 @@ import trainingsession.composeapp.generated.resources.arrow_back
 import trainingsession.composeapp.generated.resources.arrow_forward
 import trainingsession.composeapp.generated.resources.pause
 import trainingsession.composeapp.generated.resources.play
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,29 +57,16 @@ fun WorkoutPlayerScreen(
 ) {
 
     val screenState = viewModel.state.collectAsStateWithLifecycle()
-    val program =
-        screenState.value.chosenProgram?.toPresentation() ?: provideRandomProgram().toPresentation()
+    val program = screenState.value.chosenProgram.toPresentation()
 
-    // Прогресс бар меняет цвет в зависимости кол-ва шагов
-
-    var currentExerciseIndex by remember { mutableStateOf(0) }
-    var isPaused by remember { mutableStateOf(false) }
-    var timeLeft by remember { mutableStateOf(program.exercisePresentations[0].durationSeconds) }
-
-    val currentExercise = program.exercisePresentations[currentExerciseIndex]
-    val totalExercises = program.exercisePresentations.size
-    val progress =
-        (currentExerciseIndex + 1 - (timeLeft.toFloat() / currentExercise.durationSeconds)) / totalExercises
-
-    LaunchedEffect(currentExerciseIndex, isPaused, timeLeft) {
-        if (!isPaused && timeLeft > 0) {
-            delay(1000)
-            timeLeft -= 1
-        } else if (timeLeft == 0 && currentExerciseIndex < totalExercises - 1) {
-            currentExerciseIndex += 1
-            timeLeft = program.exercisePresentations[currentExerciseIndex].durationSeconds
+    val stepperList: List<Stepper> = program.exercisePresentations.map { s ->
+        object : Stepper {
+            override val durationMS: Long
+                get() = s.durationSeconds.toLong() * 30
         }
     }
+
+    val state = rememberSequentialProgressState(stepperList)
 
     Scaffold(
         topBar = {
@@ -131,23 +107,12 @@ fun WorkoutPlayerScreen(
             // Прогресс-бар
             Column(modifier = Modifier.fillMaxWidth()) {
                 ProgressRow(
-                    list = emptyList(),
-                    current = 0
+                    state = state,
                 )
                 Text(
-                    text = "Упражнение ${currentExerciseIndex + 1} из $totalExercises",
+                    text = "Упражнение ${state.currentStepIndex + 1} из ${state.totalSteps}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-
-                LinearProgressIndicator(
-                    progress = { progress },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(8.dp)
-                        .clip(RoundedCornerShape(4.dp)),
-                    color = MaterialTheme.colorScheme.primary,
-                    trackColor = MaterialTheme.colorScheme.surfaceVariant
                 )
             }
 
@@ -174,7 +139,7 @@ fun WorkoutPlayerScreen(
 //                    )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = currentExercise.name,
+                        text = "Push Ups",//currentExercise.name,
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
@@ -182,7 +147,7 @@ fun WorkoutPlayerScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = currentExercise.description,
+                        text = "Try to do it fast",//currentExercise.description,
                         style = MaterialTheme.typography.bodyMedium,
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
@@ -190,7 +155,7 @@ fun WorkoutPlayerScreen(
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(
-                        text = formatTime(timeLeft),
+                        text = state.currentStepElapsedTime.toString(),//formatTime(timeLeft),
                         style = MaterialTheme.typography.displayLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary,
@@ -208,13 +173,11 @@ fun WorkoutPlayerScreen(
             ) {
                 OutlinedButton(
                     onClick = {
-                        if (currentExerciseIndex > 0) {
-                            currentExerciseIndex -= 1
-                            timeLeft =
-                                program.exercisePresentations[currentExerciseIndex].durationSeconds
+                        if (state.hasPreviousStep) {
+                            state.previous()
                         }
                     },
-                    enabled = currentExerciseIndex > 0,
+                    enabled = state.hasPreviousStep,
                     modifier = Modifier.size(64.dp)
                 ) {
                     Icon(
@@ -226,13 +189,13 @@ fun WorkoutPlayerScreen(
                 }
 
                 FilledTonalButton(
-                    onClick = { isPaused = !isPaused },
+                    onClick = { state.playPause() },
                     modifier = Modifier.size(80.dp)
                 ) {
                     Icon(
-                        if (!isPaused) painterResource(Res.drawable.pause)
+                        if (state.isPlaying) painterResource(Res.drawable.pause)
                         else painterResource(Res.drawable.play),
-                        if (isPaused) "Играть" else "Пауза",
+                        if (state.isPlaying) "Играть" else "Пауза",
                         modifier = Modifier.fillMaxSize(),
                         tint = MaterialTheme.colorScheme.primary
                     )
@@ -240,13 +203,11 @@ fun WorkoutPlayerScreen(
 
                 OutlinedButton(
                     onClick = {
-                        if (currentExerciseIndex < totalExercises - 1) {
-                            currentExerciseIndex += 1
-                            timeLeft =
-                                program.exercisePresentations[currentExerciseIndex].durationSeconds
+                        if (state.hasNextStep) {
+                            state.next()
                         }
                     },
-                    enabled = currentExerciseIndex < totalExercises - 1,
+                    enabled = state.hasNextStep,
                     modifier = Modifier.size(64.dp)
                 ) {
                     Icon(
@@ -265,43 +226,12 @@ fun WorkoutPlayerScreen(
 
 @Composable
 fun ProgressRow(
-    list: List<StepProgress>,
-    restInterval: Duration = 10.seconds,
-    current: Int
+    state: SequentialProgressState<Stepper>,
 ) {
-    var currentStepIndex by remember { mutableStateOf(0) }
-    var currentStepProgress by remember { mutableStateOf(0f) }
-    val progressAnimatable = remember { Animatable(0f) }
-    val dataLength = 10
-
-    LaunchedEffect(currentStepIndex) {
-        progressAnimatable.animateTo(0f)
-        progressAnimatable.animateTo(
-            targetValue = 1f,
-            animationSpec = tween(
-                durationMillis = 2000,
-                delayMillis = 0,
-                easing = LinearEasing
-            )
-        ) {
-            currentStepProgress = value // Обновляем прогресс во время анимации
-        }
-        currentStepProgress = 0f
-        currentStepIndex = (currentStepIndex + 1) % dataLength
-    }
-
     SequentialProgressView(
-        modifier = Modifier,
-        dataLength = dataLength,
-        currentStepIndex = currentStepIndex,
-        currentStepProgress = currentStepProgress, // <-- Передаем прогресс
-        previewCountRight = 2,
-        previewCountLeft = 0
+        modifier = Modifier.fillMaxWidth(),
+        state = state,
     )
-}
-
-interface StepProgress {
-    val duration: Duration
 }
 
 fun formatTime(seconds: Int): String {
