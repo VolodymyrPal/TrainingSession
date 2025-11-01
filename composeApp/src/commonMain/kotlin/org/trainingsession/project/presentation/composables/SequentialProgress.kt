@@ -189,43 +189,28 @@ fun ProgressDot(
     toShow: Boolean,
     modifier: Modifier = Modifier,
     size: Dp = 10.dp,
-    lineWidth: Dp = 2.dp,
+    lineWidth: Dp = 4.dp,
     primaryColor: Color = MaterialTheme.colorScheme.primary,
     surfaceColor: Color = MaterialTheme.colorScheme.surfaceVariant
 ) {
-    val targetWidth = if (toShow) size else lineWidth
-    val targetCornerRadius = if (toShow) size / 2 else 1.dp
+    val transition = updateTransition(targetState = toShow, label = "DotTransition")
 
-    val animatedWidth by animateDpAsState(
-        targetValue = targetWidth,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessMedium
-        ),
-        label = "WidthAnimation"
-    )
+    val animatedWidth by transition.animateDp(
+        transitionSpec = { spring() }, label = "WidthAnimation"
+    ) { isVisible -> if (isVisible) size else lineWidth }
 
-    val animatedCornerRadius by animateDpAsState(
-        targetValue = targetCornerRadius,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessMedium
-        ),
-        label = "CornerRadiusAnimation"
-    )
+    val animatedCornerRadius by transition.animateDp(
+        transitionSpec = { spring() }, label = "CornerRadiusAnimation"
+    ) { isVisible -> if (isVisible) size / 2 else 1.dp }
 
-    Box(
-        modifier = modifier
-            .height(size)
-            .width(animatedWidth)
+    Canvas(
+        modifier.height(size).width(animatedWidth)
     ) {
-        Canvas(Modifier.fillMaxSize()) {
-            drawRoundRect(
-                color = if (isCompleted) primaryColor else surfaceColor,
-                size = Size(this.size.width, this.size.height),
-                cornerRadius = CornerRadius(animatedCornerRadius.toPx())
-            )
-        }
+        drawRoundRect(
+            color = if (isCompleted) primaryColor else surfaceColor,
+            size = Size(this.size.width, this.size.height),
+            cornerRadius = CornerRadius(animatedCornerRadius.toPx())
+        )
     }
 }
 
