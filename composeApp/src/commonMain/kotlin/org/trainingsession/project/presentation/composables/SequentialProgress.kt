@@ -43,7 +43,100 @@ interface Stepper {
     val duration: Long
 }
 
-@OptIn(ExperimentalTime::class)
+@Stable
+class SequentialProgressState<T : Stepper>(val steps: List<T>, initialStepIndex: Int = 0) {
+    private var _currentStepIndex = mutableStateOf(
+        initialStepIndex.coerceIn(
+            0,
+            steps.lastIndex.coerceAtLeast(0)
+        )
+    )
+    val currentStepIndex: Int get() = _currentStepIndex.value
+
+    private var _isPlaying = mutableStateOf(false)
+    val isPlaying: Boolean get() = _isPlaying.value
+
+    private val _stepProgresses = steps.map { mutableStateOf(0f) }
+    private val _stepElapsedTimes = steps.map { mutableStateOf(0L) }
+
+    fun getProgress(index: Int): Float = _stepProgresses.getOrNull(index)?.value ?: 0f
+    fun getElapsedTime(index: Int): Long = _stepElapsedTimes.getOrNull(index)?.value ?: 0L
+
+    val currentStepData: T? get() = steps.getOrNull(_currentStepIndex.value)
+    val currentStepProgress: Float get() = getProgress(_currentStepIndex.value)
+    val currentStepElapsedTime: Long get() = getElapsedTime(_currentStepIndex.value)
+
+    internal fun setProgress(index: Int, progress: Float) {
+        _stepProgresses.getOrNull(index)?.value = progress.coerceIn(0f, 1f)
+    }
+
+    internal fun setElapsedTime(index: Int, time: Long) {
+        val duration = steps.getOrNull(index)?.durationMS ?: 0L
+        _stepElapsedTimes.getOrNull(index)?.value = time.coerceAtLeast(0L).coerceAtMost(duration)
+    }
+
+    val hasNextStep: Boolean get() = _currentStepIndex.value < steps.size - 1
+    val hasPreviousStep: Boolean get() = _currentStepIndex.value > 0
+    val isCompleted: Boolean get() = _currentStepIndex.value >= steps.size - 1 && currentStepProgress == 1f
+    val totalSteps: Int get() = steps.size
+
+    fun play() {
+        if (_currentStepIndex.value < steps.size) {
+            _isPlaying.value = true
+        }
+    }
+
+    fun pause() {
+        _isPlaying.value = false
+    }
+
+    fun stop() {
+        _isPlaying.value = false
+        reset()
+    }
+
+    fun reset() {
+        _isPlaying.value = false
+        _currentStepIndex.value = 0
+        _stepProgresses.forEach { it.value = 0f }
+        _stepElapsedTimes.forEach { it.value = 0L }
+    }
+
+    fun resetCurrentStep() {
+        _isPlaying.value = false
+        setProgress(_currentStepIndex.value, 0f)
+        setElapsedTime(_currentStepIndex.value, 0L)
+    }
+
+    fun next() {
+        if (hasNextStep) {
+            _currentStepIndex.value++
+        }
+    }
+
+    fun previous() {
+        if (hasPreviousStep) {
+            _currentStepIndex.value--
+        }
+    }
+
+    fun seekToStep(stepIndex: Int) {
+        if (stepIndex in 0 until steps.size) {
+            _currentStepIndex.value = stepIndex
+            _isPlaying.value = false
+        }
+    }
+
+    internal fun onStepComplete() {
+        if (hasNextStep) {
+            next()
+        } else {
+            _isPlaying.value = false
+            setProgress(_currentStepIndex.value, 1f)
+        }
+    }
+}
+
 @Composable
 fun <T : Stepper> SequentialProgressView(
     steps: List<T>,
