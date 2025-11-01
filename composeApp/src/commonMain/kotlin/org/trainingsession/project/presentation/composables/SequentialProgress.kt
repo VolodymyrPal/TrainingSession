@@ -307,6 +307,16 @@ fun ProgressDot(
     }
 }
 
+@Composable
+fun <T : Stepper> rememberSequentialProgressState(
+    steps: List<T>,
+    initialStepIndex: Int = 0
+): SequentialProgressState<T> {
+    return remember(steps) {
+        SequentialProgressState(steps, initialStepIndex)
+    }
+}
+
 data class ExerciseStep(
     val name: String,
     override val duration: Long
