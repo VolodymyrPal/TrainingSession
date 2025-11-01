@@ -327,12 +327,9 @@ data class ExerciseStep(
 fun ProgressPreview() {
     AppTheme {
         Box(modifier = Modifier.fillMaxSize()) {
-            var currentStepIndex by remember { mutableStateOf(0) }
-            var isPlaying by remember { mutableStateOf(true) }
-
             val steps = remember {
                 listOf(
-                    ExerciseStep("Warm up", 10000L),
+                    ExerciseStep("Warm up", 5000L),
                     ExerciseStep("Push ups", 3000L),
                     ExerciseStep("Rest", 1000L),
                     ExerciseStep("Squats", 3000L),
@@ -342,27 +339,95 @@ fun ProgressPreview() {
                 )
             }
 
-            Button(
-                modifier = Modifier.align(Alignment.BottomEnd),
-                onClick = { isPlaying = !isPlaying },
-                content = {
-                    Text(text = if (isPlaying) "Pause" else "Play")
+            val state = rememberSequentialProgressState(steps = steps)
+
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(vertical = 8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    val currentStep = state.currentStepData
+                    if (currentStep != null) {
+                        Text(
+                            text = "${currentStep.name} (${state.currentStepIndex + 1}/${state.totalSteps})",
+                            style = MaterialTheme.typography.headlineMedium
+                        )
+                        Text(
+                            text = "${state.currentStepElapsedTime}ms / ${currentStep.durationMS}ms (${(state.currentStepProgress * 100).toInt()}%)",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    } else {
+                        Spacer(
+                            modifier = Modifier.height(
+                                with(LocalDensity.current) {
+                                    MaterialTheme.typography.headlineMedium.lineHeight.toDp() +
+                                            MaterialTheme.typography.bodyMedium.lineHeight.toDp()
+                                }
+                            ))
+                    }
                 }
-            )
 
+                SequentialProgressView(
+                    modifier = Modifier.fillMaxWidth(),
+                    state = state,
+                    previewCountRight = 2,
+                    previewCountLeft = 2,
+                    onStepStart = { step, index ->
+                        println("Started: ${step.name} (index: $index)")
+                    },
+                    onStepComplete = { step, index ->
+                        println("Completed: ${step.name} (index: $index)")
+                    },
+                    onStepChange = { step, index ->
+                        println("Changed to: ${step?.name} (index: $index)")
+                    },
+                    onProgressUpdate = { step, index, progress ->
+                        // println("Progress: ${step.name} - $progress")
+                    },
+                    onAllStepsComplete = {
+                        println("All steps completed!")
+                    }
+                )
 
+                Spacer(modifier = Modifier.height(32.dp))
 
-            SequentialProgressView(
-                modifier = Modifier.align(Alignment.Center),
-                steps = steps,
-                currentStepIndex = currentStepIndex,
-                isPlaying = isPlaying,
-                onStepComplete = {
-                    currentStepIndex = (currentStepIndex + 1) % steps.size
-                },
-                previewCountRight = 2,
-                previewCountLeft = 2
-            )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(onClick = { state.previous() }) {
+                        Text("Previous")
+                    }
+                    Button(onClick = {
+                        if (state.isPlaying) state.pause() else state.play()
+                    }) {
+                        Text(if (state.isPlaying) "Pause" else "Play")
+                    }
+                    Button(onClick = { state.stop() }) {
+                        Text("Stop")
+                    }
+                    Button(onClick = { state.next() }) {
+                        Text("Next")
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(onClick = { state.resetCurrentStep() }) {
+                        Text("Reset Current")
+                    }
+                    Button(onClick = { state.seekToStep(3) }) {
+                        Text("Go to Step 4")
+                    }
+                }
+            }
         }
     }
 }
