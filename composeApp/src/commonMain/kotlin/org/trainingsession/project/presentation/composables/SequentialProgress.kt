@@ -137,6 +137,14 @@ class SequentialProgressState<T : Stepper>(val steps: List<T>, initialStepIndex:
             setProgress(_currentStepIndex.value, 1f)
         }
     }
+
+    fun playPause() {
+        if (_isPlaying.value) {
+            pause()
+        } else {
+            play()
+        }
+    }
 }
 
 @Composable
