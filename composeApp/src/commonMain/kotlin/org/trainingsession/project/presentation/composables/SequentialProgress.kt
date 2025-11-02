@@ -209,10 +209,22 @@ fun <T : Stepper> SequentialProgressView(
     }
 
     LaunchedEffect(state.currentStepIndex) {
+        onStepChange(state.currentStepData, state.currentStepIndex)
         val stepIndex = state.currentStepIndex
         val currentStep = state.currentStepData
         if (currentStep == null || currentStep.durationMS <= 0L) {
             if (currentStep != null) state.onStepComplete()
+            if (currentStep != null) {
+                onStepStart(currentStep, stepIndex)
+                state.setProgress(stepIndex, 1f)
+                onProgressUpdate(currentStep, stepIndex, 1f)
+                onStepComplete(currentStep, stepIndex)
+                state.onStepComplete()
+            }
+            return@LaunchedEffect
+        }
+    }
+
             return@LaunchedEffect
         }
 
