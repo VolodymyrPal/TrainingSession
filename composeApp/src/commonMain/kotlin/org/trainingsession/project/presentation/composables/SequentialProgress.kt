@@ -236,21 +236,13 @@ fun <T : Stepper> SequentialProgressView(
             return@LaunchedEffect
         }
 
-        snapshotFlow { state.isPlaying }.collect { isPlaying ->
-            if (isPlaying) {
-                val duration = currentStep.durationMS
-                onStepStart?.invoke(currentStep, stepIndex)
-                var elapsedTime = state.getElapsedTime(stepIndex)
-                val startTime = withFrameNanos { it } - (elapsedTime * 1_000_000)
-                while (elapsedTime < duration && state.isPlaying && state.currentStepIndex == stepIndex) {
-                    val frameTime = withFrameNanos { it }
-                    val newElapsedTime = (frameTime - startTime) / 1_000_000
-                    val progress = newElapsedTime.toFloat() / duration.toFloat()
-                    state.setElapsedTime(stepIndex, newElapsedTime)
-                    state.setProgress(stepIndex, progress)
-                    elapsedTime = newElapsedTime
-                    onProgressUpdate?.invoke(currentStep, stepIndex, progress)
-                }
+        val elapsedTime = state.getElapsedTime(stepIndex)
+
+        if (elapsedTime == 0L) {
+            onStepStart(currentStep, stepIndex)
+        } else {
+            onStepContinue(currentStep, stepIndex)
+        }
 
                 if (state.currentStepIndex == stepIndex && state.currentStepElapsedTime >= duration) {
                     state.setProgress(stepIndex, 1f)
