@@ -181,17 +181,20 @@ class SequentialProgressState<T : Stepper>(val steps: List<T>, initialStepIndex:
     }
 }
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun <T : Stepper> SequentialProgressView(
     state: SequentialProgressState<T>,
     previewCountRight: Int = 2,
     previewCountLeft: Int = 1,
     modifier: Modifier = Modifier,
-    onStepStart: ((T, Int) -> Unit)? = null,
-    onStepComplete: ((T, Int) -> Unit)? = null,
-    onStepChange: ((T?, Int) -> Unit)? = null,
-    onProgressUpdate: ((T, Int, Float) -> Unit)? = null,
-    onAllStepsComplete: (() -> Unit)? = null
+    onStepStart: ((T, Int) -> Unit) = { _, _ -> },
+    onStepComplete: ((T, Int) -> Unit) = { _, _ -> },
+    onStepContinue: ((T, Int) -> Unit) = { _, _ -> },
+    onStepPause: ((T, Int) -> Unit) = { _, _ -> },
+    onStepChange: ((T?, Int) -> Unit) = { _, _ -> },
+    onProgressUpdate: ((T, Int, Float) -> Unit) = { _, _, _ -> },
+    onAllStepsComplete: (() -> Unit) = { }
 ) {
 
     LaunchedEffect(state.currentStepIndex) {
