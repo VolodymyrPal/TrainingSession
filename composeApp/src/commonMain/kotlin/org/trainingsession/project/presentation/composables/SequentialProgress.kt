@@ -112,7 +112,8 @@ class SequentialProgressState<T : Stepper>(val steps: List<T>, initialStepIndex:
 
     val hasNextStep: Boolean get() = _currentStepIndex.value < steps.size - 1
     val hasPreviousStep: Boolean get() = _currentStepIndex.value > 0
-    val isCompleted: Boolean get() = _currentStepIndex.value >= steps.size - 1 && currentStepProgress == 1f
+    val stepIsCompleted: Boolean get() = _currentStepIndex.value >= steps.size - 1 && currentStepProgress == 1f
+    val allStepsCompleted: Boolean get() = _stepProgresses.all { it.value == 1f }
     val totalSteps: Int get() = steps.size
 
     fun play() {
