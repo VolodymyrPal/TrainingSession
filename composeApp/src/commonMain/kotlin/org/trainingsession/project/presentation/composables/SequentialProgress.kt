@@ -244,13 +244,30 @@ fun <T : Stepper> SequentialProgressView(
             onStepContinue(currentStep, stepIndex)
         }
 
-                if (state.currentStepIndex == stepIndex && state.currentStepElapsedTime >= duration) {
-                    state.setProgress(stepIndex, 1f)
-                    onStepComplete?.invoke(currentStep, stepIndex)
-                    if (!state.hasNextStep) onAllStepsComplete?.invoke()
-                    state.onStepComplete()
+        val startTime = Clock.System.now().toEpochMilliseconds() - elapsedTime
+        while (isActive && state.isPlaying && state.currentStepIndex == stepIndex) {
+            val newElapsedTime = Clock.System.now().toEpochMilliseconds() - startTime
+
+            if (newElapsedTime >= duration) {
+                state.setElapsedTime(stepIndex, duration)
+                state.setProgress(stepIndex, 1f)
+                onProgressUpdate(currentStep, stepIndex, 1f)
+
+                onStepComplete(currentStep, stepIndex)
+                state.onStepComplete()
+                if (!state.hasNextStep) {
+                    if (state.allStepsCompleted && !state.isPlaying) {
+                        onAllStepsComplete()
+                    }
                 }
+                break
+            } else {
+                state.setElapsedTime(stepIndex, newElapsedTime)
+                state.setProgress(stepIndex, newElapsedTime.toFloat() / duration.toFloat())
+                onProgressUpdate(currentStep, stepIndex, state.currentStepProgress)
             }
+
+            delay(33L)
         }
     }
 
