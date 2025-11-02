@@ -196,6 +196,17 @@ fun <T : Stepper> SequentialProgressView(
     onProgressUpdate: ((T, Int, Float) -> Unit) = { _, _, _ -> },
     onAllStepsComplete: (() -> Unit) = { }
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) { //TODO check with prod
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_PAUSE -> state.pause()
+                else -> {}
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
 
     LaunchedEffect(state.currentStepIndex) {
         val stepIndex = state.currentStepIndex
