@@ -1,7 +1,6 @@
 package org.trainingsession.project.presentation.composables
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.updateTransition
@@ -20,14 +19,16 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshotFlow
-import androidx.compose.runtime.withFrameNanos
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -38,8 +39,15 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.trainingsession.project.presentation.theme.AppTheme
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 interface Stepper {
     val durationMS: Long
@@ -399,7 +407,7 @@ fun <T : Stepper> rememberSequentialProgressState(
     steps: List<T>,
     initialStepIndex: Int = 0
 ): SequentialProgressState<T> {
-    return remember(steps) {
+    return rememberSaveable(steps, saver = SequentialProgressState.Saver(steps)) {
         SequentialProgressState(steps, initialStepIndex)
     }
 }
@@ -455,7 +463,8 @@ fun ProgressPreview() {
                                     MaterialTheme.typography.headlineMedium.lineHeight.toDp() +
                                             MaterialTheme.typography.bodyMedium.lineHeight.toDp()
                                 }
-                            ))
+                            )
+                        )
                     }
                 }
 
