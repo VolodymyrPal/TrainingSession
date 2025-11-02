@@ -14,7 +14,7 @@ import org.trainingsession.project.domain.repository.ProgramRepository
 import org.trainingsession.project.utils.AppLogger
 
 @KoinViewModel
-class ExerciseScreenViewModel(
+class WorkoutScreenViewModel(
     private val repository: ProgramRepository,
     @InjectedParam
     val programId: Int
