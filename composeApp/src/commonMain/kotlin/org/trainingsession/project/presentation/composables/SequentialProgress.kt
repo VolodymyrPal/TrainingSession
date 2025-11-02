@@ -213,7 +213,6 @@ fun <T : Stepper> SequentialProgressView(
         val stepIndex = state.currentStepIndex
         val currentStep = state.currentStepData
         if (currentStep == null || currentStep.durationMS <= 0L) {
-            if (currentStep != null) state.onStepComplete()
             if (currentStep != null) {
                 onStepStart(currentStep, stepIndex)
                 state.setProgress(stepIndex, 1f)
@@ -225,6 +224,15 @@ fun <T : Stepper> SequentialProgressView(
         }
     }
 
+    LaunchedEffect(state.currentStepIndex, state.isPlaying) {
+        val stepIndex = state.currentStepIndex
+        val currentStep = state.currentStepData ?: return@LaunchedEffect
+        val duration = currentStep.durationMS.takeIf { it > 0 } ?: return@LaunchedEffect
+
+        if (!state.isPlaying) {
+            if (state.getElapsedTime(stepIndex) > 0) {
+                onStepPause(currentStep, stepIndex)
+            }
             return@LaunchedEffect
         }
 
