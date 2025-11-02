@@ -335,38 +335,31 @@ fun <T : Stepper> SequentialProgress(
 
 @Composable
 fun ProgressConnector(
-    progress: Float,
+    progress: () -> Float,
     modifier: Modifier = Modifier,
     lineHeight: Dp = 6.dp,
     primaryColor: Color = MaterialTheme.colorScheme.primary,
     surfaceColor: Color = MaterialTheme.colorScheme.surfaceVariant
 ) {
-    Box(
-        modifier = modifier
-            .height(lineHeight)
-            .padding(horizontal = 4.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Canvas(Modifier.fillMaxSize()) {
-            val progressWidth = size.width * progress.coerceIn(0f, 1f)
+    Canvas(modifier.height(lineHeight)) {
+        val progressWidth = size.width * progress().coerceIn(0f, 1f)
 
+        drawLine(
+            color = surfaceColor,
+            start = Offset(0f, size.height / 2),
+            end = Offset(size.width, size.height / 2),
+            strokeWidth = size.height,
+            cap = StrokeCap.Round
+        )
+
+        if (progressWidth > 0) {
             drawLine(
-                color = surfaceColor,
+                color = primaryColor,
                 start = Offset(0f, size.height / 2),
-                end = Offset(size.width, size.height / 2),
+                end = Offset(progressWidth, size.height / 2),
                 strokeWidth = size.height,
                 cap = StrokeCap.Round
             )
-
-            if (progressWidth > 0) {
-                drawLine(
-                    color = primaryColor,
-                    start = Offset(0f, size.height / 2),
-                    end = Offset(progressWidth, size.height / 2),
-                    strokeWidth = size.height,
-                    cap = StrokeCap.Round
-                )
-            }
         }
     }
 }
