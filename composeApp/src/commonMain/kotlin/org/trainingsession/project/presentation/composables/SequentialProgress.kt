@@ -47,6 +47,39 @@ interface Stepper {
 
 @Stable
 class SequentialProgressState<T : Stepper>(val steps: List<T>, initialStepIndex: Int = 0) {
+
+    companion object {
+        fun <T : Stepper> Saver(steps: List<T>): Saver<SequentialProgressState<T>, Any> {
+            return listSaver(
+                save = { state ->
+                    listOf(
+                        state.currentStepIndex,
+                        false,
+                        state._stepProgresses.map { p -> p.value }.toFloatArray(),
+                        state._stepElapsedTimes.map { t -> t.value }.toLongArray()
+                    )
+                },
+                restore = {
+                    @Suppress("UNCHECKED_CAST")
+                    val index = it[0] as Int
+                    val isPlaying = it[1] as Boolean
+                    val progresses = it[2] as FloatArray
+                    val elapsedTimes = it[3] as LongArray
+
+                    SequentialProgressState(steps, index).apply {
+                        _isPlaying.value = isPlaying
+                        progresses.forEachIndexed { i, progress ->
+                            _stepProgresses.getOrNull(i)?.value = progress
+                        }
+                        elapsedTimes.forEachIndexed { i, time ->
+                            _stepElapsedTimes.getOrNull(i)?.value = time
+                        }
+                    }
+                }
+            )
+        }
+    }
+
     private var _currentStepIndex = mutableStateOf(
         initialStepIndex.coerceIn(
             0,
