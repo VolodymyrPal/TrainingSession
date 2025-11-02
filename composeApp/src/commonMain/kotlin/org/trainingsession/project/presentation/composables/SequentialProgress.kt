@@ -191,7 +191,7 @@ class SequentialProgressState<T : Stepper>(val steps: List<T>, initialStepIndex:
 
 @OptIn(ExperimentalTime::class)
 @Composable
-fun <T : Stepper> SequentialProgressView(
+fun <T : Stepper> SequentialProgress(
     state: SequentialProgressState<T>,
     previewCountRight: Int = 2,
     previewCountLeft: Int = 1,
@@ -468,7 +468,7 @@ fun ProgressPreview() {
                     }
                 }
 
-                SequentialProgressView(
+                SequentialProgress(
                     modifier = Modifier.fillMaxWidth(),
                     state = state,
                     previewCountRight = 2,

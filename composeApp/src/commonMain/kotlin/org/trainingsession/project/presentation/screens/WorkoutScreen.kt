@@ -224,16 +224,6 @@ fun WorkoutPlayerScreen(
     }
 }
 
-@Composable
-fun ProgressRow(
-    state: SequentialProgressState<Stepper>,
-) {
-    SequentialProgressView(
-        modifier = Modifier.fillMaxWidth(),
-        state = state,
-    )
-}
-
 fun formatTime(seconds: Int): String {
     val mins = seconds / 60
     val secs = seconds % 60
