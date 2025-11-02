@@ -11,6 +11,9 @@ import org.koin.android.annotation.KoinViewModel
 import org.koin.core.annotation.InjectedParam
 import org.trainingsession.project.domain.models.Program
 import org.trainingsession.project.domain.repository.ProgramRepository
+import org.trainingsession.project.presentation.composables.SequentialProgressState
+import org.trainingsession.project.presentation.composables.Stepper
+import org.trainingsession.project.presentation.models.toPresentation
 import org.trainingsession.project.utils.AppLogger
 
 @KoinViewModel
@@ -38,6 +41,21 @@ class WorkoutScreenViewModel(
                     chosenProgram = program
                 )
             }
+
+            val stepperList: List<AppStepper> = program.toPresentation().exercisePresentations.map { s ->
+                object : AppStepper() {
+                    override val durationMS: Long
+                        get() = s.durationSeconds.toLong() * 15
+                }
+            }
+            val newProgressState = SequentialProgressState(stepperList)
+            _state.update { currentState ->
+                currentState.copy(
+                    programName = program.name,
+                    chosenProgram = program,
+                    progressState = newProgressState,
+                )
+            }
         }
     }
 }
@@ -50,4 +68,5 @@ data class ExerciseScreenState(
         name = "",
         programExercises = emptyList()
     ),
+    val progressState: SequentialProgressState<AppStepper> = SequentialProgressState(emptyList())
 )
