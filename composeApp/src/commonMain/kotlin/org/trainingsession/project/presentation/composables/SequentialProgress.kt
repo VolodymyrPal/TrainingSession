@@ -280,13 +280,13 @@ fun <T : Stepper> SequentialProgress(
         ) {
             (0 until state.currentStepIndex).forEach { index ->
                 val toShow = index >= state.currentStepIndex - previewCountLeft
-                val isStepComplete = state.getProgress(index) >= 1f
+                val isCompleted = derivedStateOf { state.isStepCompleted(index) }
 
                 key(index) {
                     ProgressDot(
-                        isCompleted = isStepComplete,
+                        isCompleted = isCompleted.value,
                         toShow = toShow,
-                        modifier = Modifier.animateContentSize()
+                        modifier = Modifier
                     )
                 }
             }
@@ -294,8 +294,8 @@ fun <T : Stepper> SequentialProgress(
 
         if (state.totalSteps > 0 && state.currentStepIndex < state.totalSteps) {
             ProgressConnector(
-                progress = state.currentStepProgress,
-                modifier = Modifier.weight(1f)
+                progress = { state.currentStepProgress },
+                modifier = Modifier.padding(4.dp).weight(1f)
             )
         }
 
@@ -305,16 +305,16 @@ fun <T : Stepper> SequentialProgress(
         ) {
             (state.currentStepIndex until state.totalSteps).forEach { index ->
                 val isCurrent = index == state.currentStepIndex
-                val isUpcomingCircle = index > state.currentStepIndex &&
-                        index <= state.currentStepIndex + previewCountRight
-                val toShow = isCurrent || isUpcomingCircle
-                val isStepComplete = state.getProgress(index) >= 1f
+                val isUpcoming =
+                    index > state.currentStepIndex && index <= state.currentStepIndex + previewCountRight
+                val toShow = isCurrent || isUpcoming
+                val isCompleted = derivedStateOf { state.isStepCompleted(index) }
 
                 key(index) {
                     ProgressDot(
-                        isCompleted = isStepComplete,
+                        isCompleted = isCompleted.value,
                         toShow = toShow,
-                        modifier = Modifier.animateContentSize()
+                        modifier = Modifier
                     )
                 }
             }
