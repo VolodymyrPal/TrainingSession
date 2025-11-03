@@ -34,12 +34,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
-import org.trainingsession.project.presentation.composables.SequentialProgressState
-import org.trainingsession.project.presentation.composables.SequentialProgressView
-import org.trainingsession.project.presentation.composables.Stepper
-import org.trainingsession.project.presentation.composables.rememberSequentialProgressState
-import org.trainingsession.project.presentation.models.toPresentation
-import org.trainingsession.project.presentation.viewModels.ExerciseScreenViewModel
+import org.trainingsession.project.presentation.composables.SequentialProgress
+import org.trainingsession.project.presentation.viewModels.WorkoutScreenViewModel
+import org.trainingsession.project.utils.AppLogger
 import trainingsession.composeapp.generated.resources.Res
 import trainingsession.composeapp.generated.resources.arrow_back
 import trainingsession.composeapp.generated.resources.arrow_forward
@@ -51,22 +48,12 @@ import trainingsession.composeapp.generated.resources.play
 @Composable
 fun WorkoutPlayerScreen(
     onBackClick: () -> Unit,
-    viewModel: ExerciseScreenViewModel = koinViewModel(
+    viewModel: WorkoutScreenViewModel = koinViewModel(
         parameters = { parametersOf(1) }
     )
 ) {
-
     val screenState = viewModel.state.collectAsStateWithLifecycle()
-    val program = screenState.value.chosenProgram.toPresentation()
-
-    val stepperList: List<Stepper> = program.exercisePresentations.map { s ->
-        object : Stepper {
-            override val durationMS: Long
-                get() = s.durationSeconds.toLong() * 30
-        }
-    }
-
-    val state = rememberSequentialProgressState(stepperList)
+    val progressState = screenState.value.progressState
 
     Scaffold(
         topBar = {
@@ -104,13 +91,16 @@ fun WorkoutPlayerScreen(
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Прогресс-бар
             Column(modifier = Modifier.fillMaxWidth()) {
-                ProgressRow(
-                    state = state,
+                SequentialProgress(
+                    modifier = Modifier.fillMaxWidth(),
+                    state = progressState,
+                    onAllStepsComplete = {
+                        AppLogger.d("Stepper", "All completed")
+                    },
                 )
                 Text(
-                    text = "Упражнение ${state.currentStepIndex + 1} из ${state.totalSteps}",
+                    text = "Упражнение ${progressState.currentStepIndex + 1} из ${progressState.totalSteps}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -118,7 +108,6 @@ fun WorkoutPlayerScreen(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // Центральный блок с упражнением
             Card(
                 modifier = Modifier.size(280.dp),
                 shape = RoundedCornerShape(24.dp),
@@ -131,12 +120,6 @@ fun WorkoutPlayerScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-//                    Icon(
-//                        painter = painterResource(program.icon),
-//                        contentDescription = null,
-//                        modifier = Modifier.size(72.dp),
-//                        tint = MaterialTheme.colorScheme.onPrimaryContainer
-//                    )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = "Push Ups",//currentExercise.name,
@@ -155,7 +138,7 @@ fun WorkoutPlayerScreen(
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(
-                        text = state.currentStepElapsedTime.toString(),//formatTime(timeLeft),
+                        text = progressState.currentStepElapsedTime.toString(),
                         style = MaterialTheme.typography.displayLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary,
@@ -166,18 +149,17 @@ fun WorkoutPlayerScreen(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // Кнопки управления
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 OutlinedButton(
                     onClick = {
-                        if (state.hasPreviousStep) {
-                            state.previous()
+                        if (progressState.hasPreviousStep) {
+                            progressState.previous()
                         }
                     },
-                    enabled = state.hasPreviousStep,
+                    enabled = progressState.hasPreviousStep,
                     modifier = Modifier.size(64.dp)
                 ) {
                     Icon(
@@ -189,13 +171,13 @@ fun WorkoutPlayerScreen(
                 }
 
                 FilledTonalButton(
-                    onClick = { state.playPause() },
+                    onClick = { progressState.playPause() },
                     modifier = Modifier.size(80.dp)
                 ) {
                     Icon(
-                        if (state.isPlaying) painterResource(Res.drawable.pause)
+                        if (progressState.isPlaying) painterResource(Res.drawable.pause)
                         else painterResource(Res.drawable.play),
-                        if (state.isPlaying) "Играть" else "Пауза",
+                        if (progressState.isPlaying) "Играть" else "Пауза",
                         modifier = Modifier.fillMaxSize(),
                         tint = MaterialTheme.colorScheme.primary
                     )
@@ -203,11 +185,11 @@ fun WorkoutPlayerScreen(
 
                 OutlinedButton(
                     onClick = {
-                        if (state.hasNextStep) {
-                            state.next()
+                        if (progressState.hasNextStep) {
+                            progressState.next()
                         }
                     },
-                    enabled = state.hasNextStep,
+                    enabled = progressState.hasNextStep,
                     modifier = Modifier.size(64.dp)
                 ) {
                     Icon(
