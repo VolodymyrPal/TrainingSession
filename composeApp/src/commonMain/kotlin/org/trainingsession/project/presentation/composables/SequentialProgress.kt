@@ -87,7 +87,7 @@ class SequentialProgressState<T : Stepper>(val steps: List<T>, initialStepIndex:
         }
     }
 
-    private var _currentStepIndex = mutableStateOf(
+    private val _currentStepIndex = mutableStateOf(
         initialStepIndex.coerceIn(
             0,
             steps.lastIndex.coerceAtLeast(0)
@@ -95,31 +95,32 @@ class SequentialProgressState<T : Stepper>(val steps: List<T>, initialStepIndex:
     )
     val currentStepIndex: Int get() = _currentStepIndex.value
 
-    private var _isPlaying = mutableStateOf(false)
+    private val _isPlaying = mutableStateOf(false)
     val isPlaying: Boolean get() = _isPlaying.value
 
     private val _stepStates = steps.map { PerStepState() }
 
-    fun getProgress(index: Int): Float = _stepProgresses.getOrNull(index)?.value ?: 0f
-    fun getElapsedTime(index: Int): Long = _stepElapsedTimes.getOrNull(index)?.value ?: 0L
+    fun getProgress(index: Int): Float = _stepStates.getOrNull(index)?.progress?.value ?: 0f
+    fun getElapsedTime(index: Int): Long = _stepStates.getOrNull(index)?.elapsedTime?.value ?: 0L
+    fun isStepCompleted(index: Int): Boolean = getProgress(index) >= 1f
 
     val currentStepData: T? get() = steps.getOrNull(_currentStepIndex.value)
     val currentStepProgress: Float get() = getProgress(_currentStepIndex.value)
     val currentStepElapsedTime: Long get() = getElapsedTime(_currentStepIndex.value)
 
     internal fun setProgress(index: Int, progress: Float) {
-        _stepProgresses.getOrNull(index)?.value = progress.coerceIn(0f, 1f)
+        _stepStates.getOrNull(index)?.progress?.value = progress.coerceIn(0f, 1f)
     }
 
     internal fun setElapsedTime(index: Int, time: Long) {
         val duration = steps.getOrNull(index)?.durationMS ?: 0L
-        _stepElapsedTimes.getOrNull(index)?.value = time.coerceAtLeast(0L).coerceAtMost(duration)
+        _stepStates.getOrNull(index)?.elapsedTime?.value =
+            time.coerceAtLeast(0L).coerceAtMost(duration)
     }
 
     val hasNextStep: Boolean get() = _currentStepIndex.value < steps.size - 1
     val hasPreviousStep: Boolean get() = _currentStepIndex.value > 0
-    val stepIsCompleted: Boolean get() = _currentStepIndex.value >= steps.size - 1 && currentStepProgress == 1f
-    val allStepsCompleted: Boolean get() = _stepProgresses.all { it.value == 1f }
+    val allStepsCompleted: Boolean get() = _stepStates.all { it.progress.value == 1f } // Обновлено
     val totalSteps: Int get() = steps.size
 
     fun play() {
@@ -140,14 +141,12 @@ class SequentialProgressState<T : Stepper>(val steps: List<T>, initialStepIndex:
     fun reset() {
         _isPlaying.value = false
         _currentStepIndex.value = 0
-        _stepProgresses.forEach { it.value = 0f }
-        _stepElapsedTimes.forEach { it.value = 0L }
+        _stepStates.forEach { it.reset() }
     }
 
     fun resetCurrentStep() {
         _isPlaying.value = false
-        setProgress(_currentStepIndex.value, 0f)
-        setElapsedTime(_currentStepIndex.value, 0L)
+        _stepStates.getOrNull(_currentStepIndex.value)?.reset()
     }
 
     fun next() {
@@ -170,11 +169,11 @@ class SequentialProgressState<T : Stepper>(val steps: List<T>, initialStepIndex:
     }
 
     internal fun onStepComplete() {
+        setProgress(currentStepIndex, 1f)
         if (hasNextStep) {
             next()
         } else {
             _isPlaying.value = false
-            setProgress(_currentStepIndex.value, 1f)
         }
     }
 
