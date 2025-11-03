@@ -361,7 +361,7 @@ fun ProgressDot(
     size: Dp = 10.dp,
     lineWidth: Dp = 4.dp,
     primaryColor: Color = MaterialTheme.colorScheme.primary,
-    surfaceColor: Color = MaterialTheme.colorScheme.surfaceVariant
+    surfaceColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)
 ) {
     val transition = updateTransition(targetState = toShow, label = "DotTransition")
 
@@ -373,8 +373,19 @@ fun ProgressDot(
         transitionSpec = { spring() }, label = "CornerRadiusAnimation"
     ) { isVisible -> if (isVisible) size / 2 else 1.dp }
 
+    val animatedWidthModifier = modifier.layout { measurable, constraints ->
+        val targetWidthPx = animatedWidth.roundToPx()
+        val fixedHeightPx = size.roundToPx()
+        val placeable = measurable.measure(
+            Constraints.fixed(targetWidthPx, fixedHeightPx)
+        )
+        layout(placeable.width, placeable.height) {
+            placeable.placeRelative(0, 0)
+        }
+    }
+
     Canvas(
-        modifier.height(size).width(animatedWidth)
+        modifier = animatedWidthModifier
     ) {
         drawRoundRect(
             color = if (isCompleted) primaryColor else surfaceColor,
