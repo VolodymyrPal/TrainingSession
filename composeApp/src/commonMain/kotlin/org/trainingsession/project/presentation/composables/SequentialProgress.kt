@@ -215,79 +215,57 @@ fun <T : Stepper> SequentialProgress(
     onProgressUpdate: ((T, Int, Float) -> Unit) = { _, _, _ -> },
     onAllStepsComplete: (() -> Unit) = { }
 ) {
-    val lifecycleOwner = LocalLifecycleOwner.current
-    DisposableEffect(lifecycleOwner) { //TODO check with prod
-        val observer = LifecycleEventObserver { _, event ->
-            when (event) {
-                Lifecycle.Event.ON_PAUSE -> state.pause()
-                else -> {}
-            }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
-    }
 
-    LaunchedEffect(state.currentStepIndex) {
-        onStepChange(state.currentStepData, state.currentStepIndex)
-        val stepIndex = state.currentStepIndex
-        val currentStep = state.currentStepData
-        if (currentStep == null || currentStep.durationMS <= 0L) {
-            if (currentStep != null) {
-                onStepStart(currentStep, stepIndex)
-                state.setProgress(stepIndex, 1f)
-                onProgressUpdate(currentStep, stepIndex, 1f)
-                onStepComplete(currentStep, stepIndex)
-                state.onStepComplete()
-            }
-            return@LaunchedEffect
-        }
-    }
-
-    LaunchedEffect(state.currentStepIndex, state.isPlaying) {
-        val stepIndex = state.currentStepIndex
-        val currentStep = state.currentStepData ?: return@LaunchedEffect
-        val duration = currentStep.durationMS.takeIf { it > 0 } ?: return@LaunchedEffect
-
-        if (!state.isPlaying) {
-            if (state.getElapsedTime(stepIndex) > 0) {
-                onStepPause(currentStep, stepIndex)
-            }
-            return@LaunchedEffect
-        }
-
-        val elapsedTime = state.getElapsedTime(stepIndex)
-
-        if (elapsedTime == 0L) {
-            onStepStart(currentStep, stepIndex)
-        } else {
-            onStepContinue(currentStep, stepIndex)
-        }
-
-        val startTime = Clock.System.now().toEpochMilliseconds() - elapsedTime
-        while (isActive && state.isPlaying && state.currentStepIndex == stepIndex) {
-            val newElapsedTime = Clock.System.now().toEpochMilliseconds() - startTime
-
-            if (newElapsedTime >= duration) {
-                state.setElapsedTime(stepIndex, duration)
-                state.setProgress(stepIndex, 1f)
-                onProgressUpdate(currentStep, stepIndex, 1f)
-
-                onStepComplete(currentStep, stepIndex)
-                state.onStepComplete()
-                if (!state.hasNextStep) {
-                    if (state.allStepsCompleted && !state.isPlaying) {
-                        onAllStepsComplete()
-                    }
+    LaunchedEffect(Unit) {
+        snapshotFlow { state.currentStepIndex to state.isPlaying }
+            .collectLatest { (stepIndex, isPlaying) ->
+                val currentStep = state.currentStepData ?: return@collectLatest
+                val duration = currentStep.durationMS.takeIf { it > 0 } ?: run {
+                    onStepStart(currentStep, stepIndex)
+                    state.setProgress(stepIndex, 1f)
+                    onProgressUpdate(currentStep, stepIndex, 1f)
+                    onStepComplete(currentStep, stepIndex)
+                    state.onStepComplete()
+                    return@collectLatest
                 }
-                break
-            } else {
-                state.setElapsedTime(stepIndex, newElapsedTime)
-                state.setProgress(stepIndex, newElapsedTime.toFloat() / duration.toFloat())
-                onProgressUpdate(currentStep, stepIndex, state.currentStepProgress)
-            }
 
-            delay(33L)
-        }
+                if (!isPlaying) {
+                    if (state.getElapsedTime(stepIndex) > 0L) {
+                        onStepPause(currentStep, stepIndex)
+                    }
+                    return@collectLatest
+                }
+                val elapsedBefore = state.getElapsedTime(stepIndex)
+                if (elapsedBefore == 0L) onStepStart(currentStep, stepIndex) else onStepContinue(
+                    currentStep,
+                    stepIndex
+                )
+
+                val startTime = Clock.System.now().toEpochMilliseconds() - elapsedBefore
+
+                while (isActive && state.isPlaying && state.currentStepIndex == stepIndex) {
+                    val newElapsed = Clock.System.now().toEpochMilliseconds() - startTime
+                    if (newElapsed >= duration) {
+                        state.setElapsedTime(stepIndex, duration)
+                        state.setProgress(stepIndex, 1f)
+                        onProgressUpdate(currentStep, stepIndex, 1f)
+
+                        state.onStepComplete()
+                        onStepComplete(currentStep, stepIndex)
+
+                        if (!state.hasNextStep && state.allStepsCompleted) {
+                            onAllStepsComplete()
+                        }
+                        break
+                    } else {
+                        state.setElapsedTime(stepIndex, newElapsed)
+                        state.setProgress(stepIndex, newElapsed.toFloat() / duration.toFloat())
+                        onProgressUpdate(currentStep, stepIndex, state.currentStepProgress)
+                    }
+
+                    delay(16L)
+                }
+            }
     }
 
     Row(
