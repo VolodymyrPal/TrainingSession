@@ -61,9 +61,9 @@ class SequentialProgressState<T : Stepper>(val steps: List<T>, initialStepIndex:
                 save = { state ->
                     listOf(
                         state.currentStepIndex,
-                        false,
-                        state._stepProgresses.map { p -> p.value }.toFloatArray(),
-                        state._stepElapsedTimes.map { t -> t.value }.toLongArray()
+                        state.isPlaying,
+                        state._stepStates.map { it.progress.value }.toFloatArray(),
+                        state._stepStates.map { it.elapsedTime.value }.toLongArray()
                     )
                 },
                 restore = {
@@ -76,10 +76,10 @@ class SequentialProgressState<T : Stepper>(val steps: List<T>, initialStepIndex:
                     SequentialProgressState(steps, index).apply {
                         _isPlaying.value = isPlaying
                         progresses.forEachIndexed { i, progress ->
-                            _stepProgresses.getOrNull(i)?.value = progress
+                            _stepStates.getOrNull(i)?.progress?.value = progress
                         }
                         elapsedTimes.forEachIndexed { i, time ->
-                            _stepElapsedTimes.getOrNull(i)?.value = time
+                            _stepStates.getOrNull(i)?.elapsedTime?.value = time
                         }
                     }
                 }
@@ -98,8 +98,7 @@ class SequentialProgressState<T : Stepper>(val steps: List<T>, initialStepIndex:
     private var _isPlaying = mutableStateOf(false)
     val isPlaying: Boolean get() = _isPlaying.value
 
-    private val _stepProgresses = steps.map { mutableStateOf(0f) }
-    private val _stepElapsedTimes = steps.map { mutableStateOf(0L) }
+    private val _stepStates = steps.map { PerStepState() }
 
     fun getProgress(index: Int): Float = _stepProgresses.getOrNull(index)?.value ?: 0f
     fun getElapsedTime(index: Int): Long = _stepElapsedTimes.getOrNull(index)?.value ?: 0L
@@ -184,6 +183,20 @@ class SequentialProgressState<T : Stepper>(val steps: List<T>, initialStepIndex:
             pause()
         } else {
             play()
+        }
+    }
+
+    @Stable
+    private class PerStepState(
+        initialProgress: Float = 0f,
+        initialTime: Long = 0L
+    ) {
+        val progress = mutableStateOf(initialProgress)
+        val elapsedTime = mutableStateOf(initialTime)
+
+        fun reset() {
+            progress.value = 0f
+            elapsedTime.value = 0L
         }
     }
 }
