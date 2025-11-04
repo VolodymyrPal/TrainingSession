@@ -58,7 +58,33 @@ class WorkoutScreenViewModel(
             }
         }
     }
+
+    fun playPause() {
+        if (state.value.progressState.isPlaying) {
+            progressController.pauseTimer()
+        } else {
+            progressController.startTimer()
+        }
+    }
+
+    fun nextStep() {
+        progressController.pauseTimer()
+        state.value.progressState.next()
+    }
+
+    fun previousStep() {
+        progressController.pauseTimer()
+        state.value.progressState.previous()
+    }
+
+    fun resetWorkout() {
+        progressController.stopTimer()
+    }
 }
+
+open class AppStepper(
+    override val durationMS: Long = 10L
+) : Stepper
 
 data class ExerciseScreenState(
     val programName: String = "",
