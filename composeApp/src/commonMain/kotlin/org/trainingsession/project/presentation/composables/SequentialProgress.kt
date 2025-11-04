@@ -17,7 +17,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -27,7 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -40,12 +38,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.isActive
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.trainingsession.project.presentation.theme.AppTheme
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 interface Stepper {
@@ -215,58 +209,6 @@ fun <T : Stepper> SequentialProgress(
     onProgressUpdate: ((T, Int, Float) -> Unit) = { _, _, _ -> },
     onAllStepsComplete: (() -> Unit) = { }
 ) {
-
-    LaunchedEffect(Unit) {
-        snapshotFlow { state.currentStepIndex to state.isPlaying }
-            .collectLatest { (stepIndex, isPlaying) ->
-                val currentStep = state.currentStepData ?: return@collectLatest
-                val duration = currentStep.durationMS.takeIf { it > 0 } ?: run {
-                    onStepStart(currentStep, stepIndex)
-                    state.setProgress(stepIndex, 1f)
-                    onProgressUpdate(currentStep, stepIndex, 1f)
-                    onStepComplete(currentStep, stepIndex)
-                    state.onStepComplete()
-                    return@collectLatest
-                }
-
-                if (!isPlaying) {
-                    if (state.getElapsedTime(stepIndex) > 0L) {
-                        onStepPause(currentStep, stepIndex)
-                    }
-                    return@collectLatest
-                }
-                val elapsedBefore = state.getElapsedTime(stepIndex)
-                if (elapsedBefore == 0L) onStepStart(currentStep, stepIndex) else onStepContinue(
-                    currentStep,
-                    stepIndex
-                )
-
-                val startTime = Clock.System.now().toEpochMilliseconds() - elapsedBefore
-
-                while (isActive && state.isPlaying && state.currentStepIndex == stepIndex) {
-                    val newElapsed = Clock.System.now().toEpochMilliseconds() - startTime
-                    if (newElapsed >= duration) {
-                        state.setElapsedTime(stepIndex, duration)
-                        state.setProgress(stepIndex, 1f)
-                        onProgressUpdate(currentStep, stepIndex, 1f)
-
-                        state.onStepComplete()
-                        onStepComplete(currentStep, stepIndex)
-
-                        if (!state.hasNextStep && state.allStepsCompleted) {
-                            onAllStepsComplete()
-                        }
-                        break
-                    } else {
-                        state.setElapsedTime(stepIndex, newElapsed)
-                        state.setProgress(stepIndex, newElapsed.toFloat() / duration.toFloat())
-                        onProgressUpdate(currentStep, stepIndex, state.currentStepProgress)
-                    }
-
-                    delay(16L)
-                }
-            }
-    }
 
     Row(
         modifier = modifier
