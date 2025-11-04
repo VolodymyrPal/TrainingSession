@@ -155,9 +155,7 @@ fun WorkoutPlayerScreen(
             ) {
                 OutlinedButton(
                     onClick = {
-                        if (progressState.hasPreviousStep) {
-                            progressState.previous()
-                        }
+                        viewModel.previousStep()
                     },
                     enabled = progressState.hasPreviousStep,
                     modifier = Modifier.size(64.dp)
@@ -171,7 +169,7 @@ fun WorkoutPlayerScreen(
                 }
 
                 FilledTonalButton(
-                    onClick = { progressState.playPause() },
+                    onClick = { viewModel.playPause() },
                     modifier = Modifier.size(80.dp)
                 ) {
                     Icon(
@@ -185,9 +183,7 @@ fun WorkoutPlayerScreen(
 
                 OutlinedButton(
                     onClick = {
-                        if (progressState.hasNextStep) {
-                            progressState.next()
-                        }
+                        viewModel.nextStep()
                     },
                     enabled = progressState.hasNextStep,
                     modifier = Modifier.size(64.dp)
