@@ -81,7 +81,7 @@ class ProgressController<T: Stepper> (
                             _events.emit(ProgressEvent.ProgressUpdate(currentStep, stepIndex, progress))
                         }
 
-                        delay(16L)
+                        delay(1L)
                     }
                 }
             } catch (e: CancellationException) {
