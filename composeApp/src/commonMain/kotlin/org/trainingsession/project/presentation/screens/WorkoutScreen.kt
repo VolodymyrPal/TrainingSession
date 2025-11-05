@@ -138,7 +138,7 @@ fun WorkoutPlayerScreen(
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(
-                        text = progressState.currentStepElapsedTime.toString(),
+                        text = "Nice", //progressState.currentStepElapsedTime.toString(),
                         style = MaterialTheme.typography.displayLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary,
