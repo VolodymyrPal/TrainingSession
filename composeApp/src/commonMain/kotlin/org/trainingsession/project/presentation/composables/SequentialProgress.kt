@@ -7,12 +7,14 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -272,7 +274,7 @@ fun ProgressConnector(
     primaryColor: Color = MaterialTheme.colorScheme.primary,
     surfaceColor: Color = MaterialTheme.colorScheme.surfaceVariant
 ) {
-    Canvas(modifier.height(lineHeight)) {
+    Canvas(modifier.height(lineHeight).width(IntrinsicSize.Max)) {
         val progressWidth = size.width * progress().coerceIn(0f, 1f)
 
         drawLine(
@@ -282,13 +284,17 @@ fun ProgressConnector(
             strokeWidth = size.height,
             cap = StrokeCap.Round
         )
+        val safeProgress = progress().coerceIn(0f, 1f)
+        val startFraction = 0.2f
+        val endFraction = 0.7f
+        val scaledFraction = startFraction + (endFraction - startFraction) * safeProgress
 
         if (progressWidth > 0) {
             drawLine(
                 color = primaryColor,
                 start = Offset(0f, size.height / 2),
                 end = Offset(progressWidth, size.height / 2),
-                strokeWidth = size.height,
+                strokeWidth = size.height * scaledFraction,
                 cap = StrokeCap.Round
             )
         }
