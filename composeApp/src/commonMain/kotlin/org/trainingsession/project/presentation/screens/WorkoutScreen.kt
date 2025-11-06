@@ -1,5 +1,6 @@
 package org.trainingsession.project.presentation.screens
 
+import Square
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,6 +37,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.trainingsession.project.presentation.composables.SequentialProgress
 import org.trainingsession.project.presentation.viewModels.WorkoutScreenViewModel
+import org.trainingsession.project.resources.Restore
 import org.trainingsession.project.utils.AppLogger
 import trainingsession.composeapp.generated.resources.Res
 import trainingsession.composeapp.generated.resources.arrow_back
@@ -151,7 +153,8 @@ fun WorkoutPlayerScreen(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.Bottom
             ) {
                 OutlinedButton(
                     onClick = {
@@ -167,19 +170,51 @@ fun WorkoutPlayerScreen(
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
-
-                FilledTonalButton(
-                    onClick = { viewModel.playPause() },
-                    modifier = Modifier.size(80.dp)
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    Icon(
-                        if (progressState.isPlaying) painterResource(Res.drawable.pause)
-                        else painterResource(Res.drawable.play),
-                        if (progressState.isPlaying) "Играть" else "Пауза",
-                        modifier = Modifier.fillMaxSize(),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
+                    Row {
+                        IconButton(
+                            onClick = { viewModel.resetCurrentStep() },
+                            modifier = Modifier
+                        ) {
+                            Icon(
+                                Restore,
+                                "Reset current step",
+                                modifier = Modifier,
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+
+                        IconButton(
+                            onClick = { viewModel.resetWorkout() },
+                            modifier = Modifier
+                        ) {
+                            Icon(
+                                Square,
+                                "Reset all program",
+                                modifier = Modifier,
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+
+                    FilledTonalButton(
+                        onClick = { viewModel.playPause() },
+                        modifier = Modifier.size(80.dp)
+                    ) {
+                        Icon(
+                            if (progressState.isPlaying) painterResource(Res.drawable.pause)
+                            else painterResource(Res.drawable.play),
+                            if (progressState.isPlaying) "Играть" else "Пауза",
+                            modifier = Modifier.fillMaxSize(),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
+
+
 
                 OutlinedButton(
                     onClick = {
