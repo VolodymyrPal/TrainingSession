@@ -306,8 +306,8 @@ fun ProgressDot(
     isCompleted: Boolean,
     toShow: Boolean,
     modifier: Modifier = Modifier,
-    size: Dp = 10.dp,
-    lineWidth: Dp = 4.dp,
+    size: Dp = 8.dp,
+    lineWidth: Dp = 2.dp,
     primaryColor: Color = MaterialTheme.colorScheme.primary,
     surfaceColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)
 ) {
