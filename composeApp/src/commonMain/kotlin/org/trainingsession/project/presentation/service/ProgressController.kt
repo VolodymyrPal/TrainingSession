@@ -73,7 +73,7 @@ class ProgressController<T: Stepper> (
                             if (state.allStepsCompleted) {
                                 _events.emit(ProgressEvent.AllStepsComplete())
                             }
-//                            break
+                            break
                         } else {
                             state.setElapsedTime(stepIndex, newElapsed)
                             val progress = newElapsed.toFloat() / duration.toFloat()
@@ -81,7 +81,7 @@ class ProgressController<T: Stepper> (
                             _events.emit(ProgressEvent.ProgressUpdate(currentStep, stepIndex, progress))
                         }
 
-                        delay(1L)
+                        delay(16L)
                     }
                 }
             } catch (e: CancellationException) {
@@ -101,14 +101,24 @@ class ProgressController<T: Stepper> (
         state.stop()
     }
 
-    fun resetTimer() {
+    fun resetCurrentStep() {
         timerJob?.cancel()
-        state.reset()
+        state.pause()
+
+        val stepIndex = state.currentStepIndex
+        val currentStep = state.currentStepData
+
+        if (currentStep != null) {
+            state.setElapsedTime(stepIndex, 0L)
+            state.setProgress(stepIndex, 0f)
+
+            scope.launch {
+                _events.emit(ProgressEvent.ProgressUpdate(currentStep, stepIndex, 0f))
+                _events.emit(ProgressEvent.StepReset(currentStep, stepIndex))
+            }
+        }
     }
 
-    fun release() {
-        timerJob?.cancel()
-    }
 }
 
 
@@ -116,6 +126,7 @@ sealed interface ProgressEvent<T : Stepper> {
     data class StepStart<T : Stepper>(val stepData: T, val index: Int) : ProgressEvent<T>
     data class StepContinue<T : Stepper>(val stepData: T, val index: Int) : ProgressEvent<T>
     data class StepComplete<T : Stepper>(val stepData: T, val index: Int) : ProgressEvent<T>
+    data class StepReset<T : Stepper>(val stepData: T, val index: Int) : ProgressEvent<T> // Новое событие сброса шага
     data class ProgressUpdate<T : Stepper>(val stepData: T, val index: Int, val progress: Float) : ProgressEvent<T>
     class AllStepsComplete<T : Stepper> : ProgressEvent<T>
 }
