@@ -84,6 +84,10 @@ class WorkoutScreenViewModel(
     fun resetWorkout() {
         progressController.stopTimer()
     }
+
+    fun resetCurrentStep() {
+        progressController.resetCurrentStep()
+    }
 }
 
 open class AppStepper(
