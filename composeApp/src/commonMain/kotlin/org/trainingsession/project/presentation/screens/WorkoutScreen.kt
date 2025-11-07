@@ -36,9 +36,9 @@ import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.trainingsession.project.presentation.composables.SequentialProgress
+import org.trainingsession.project.presentation.viewModels.AppStepper
 import org.trainingsession.project.presentation.viewModels.WorkoutScreenViewModel
 import org.trainingsession.project.resources.Restore
-import org.trainingsession.project.utils.AppLogger
 import trainingsession.composeapp.generated.resources.Res
 import trainingsession.composeapp.generated.resources.arrow_back
 import trainingsession.composeapp.generated.resources.arrow_forward
@@ -55,7 +55,6 @@ fun WorkoutPlayerScreen(
     )
 ) {
     val screenState = viewModel.state.collectAsStateWithLifecycle()
-    val progressState = screenState.value.progressState
 
     Scaffold(
         topBar = {
@@ -96,13 +95,11 @@ fun WorkoutPlayerScreen(
             Column(modifier = Modifier.fillMaxWidth()) {
                 SequentialProgress(
                     modifier = Modifier.fillMaxWidth(),
-                    state = progressState,
-                    onAllStepsComplete = {
-                        AppLogger.d("Stepper", "All completed")
-                    },
+                    currentStepIndex = screenState.value.currentIndex,
+                    list = screenState.value.stepperList
                 )
                 Text(
-                    text = "Упражнение ${progressState.currentStepIndex + 1} из ${progressState.totalSteps}",
+                    text = "Упражнение ${screenState.value.currentIndex + 1} из ${screenState.value.stepperList.size}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -160,7 +157,7 @@ fun WorkoutPlayerScreen(
                     onClick = {
                         viewModel.previousStep()
                     },
-                    enabled = progressState.hasPreviousStep,
+                    enabled = screenState.value.currentIndex > 0,
                     modifier = Modifier.size(64.dp)
                 ) {
                     Icon(
@@ -205,9 +202,9 @@ fun WorkoutPlayerScreen(
                         modifier = Modifier.size(80.dp)
                     ) {
                         Icon(
-                            if (progressState.isPlaying) painterResource(Res.drawable.pause)
+                            if (screenState.value.isPlaying) painterResource(Res.drawable.pause)
                             else painterResource(Res.drawable.play),
-                            if (progressState.isPlaying) "Играть" else "Пауза",
+                            if (screenState.value.isPlaying) "Играть" else "Пауза",
                             modifier = Modifier.fillMaxSize(),
                             tint = MaterialTheme.colorScheme.primary
                         )
@@ -220,7 +217,7 @@ fun WorkoutPlayerScreen(
                     onClick = {
                         viewModel.nextStep()
                     },
-                    enabled = progressState.hasNextStep,
+                    enabled = screenState.value.currentIndex < screenState.value.stepperList.size - 1,
                     modifier = Modifier.size(64.dp)
                 ) {
                     Icon(
