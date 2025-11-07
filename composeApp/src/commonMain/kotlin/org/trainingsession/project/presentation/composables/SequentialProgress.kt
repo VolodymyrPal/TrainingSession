@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -42,10 +43,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.trainingsession.project.presentation.theme.AppTheme
+import org.trainingsession.project.presentation.viewModels.AppStepper
 import kotlin.time.ExperimentalTime
 
 interface Stepper {
     val durationMS: Long
+    val elapsedTime: State<Long>
 }
 
 @Stable
