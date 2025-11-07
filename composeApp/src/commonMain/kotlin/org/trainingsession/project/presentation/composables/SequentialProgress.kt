@@ -201,20 +201,13 @@ class SequentialProgressState<T : Stepper>(val steps: List<T>, initialStepIndex:
 
 @OptIn(ExperimentalTime::class)
 @Composable
-fun <T : Stepper> SequentialProgress(
-    state: SequentialProgressState<T>,
+fun SequentialProgress(
+    list: List<AppStepper> = emptyList(),
+    currentStepIndex: Int = 0,
     previewCountRight: Int = 2,
     previewCountLeft: Int = 1,
     modifier: Modifier = Modifier,
-    onStepStart: ((T, Int) -> Unit) = { _, _ -> },
-    onStepComplete: ((T, Int) -> Unit) = { _, _ -> },
-    onStepContinue: ((T, Int) -> Unit) = { _, _ -> },
-    onStepPause: ((T, Int) -> Unit) = { _, _ -> },
-    onStepChange: ((T?, Int) -> Unit) = { _, _ -> },
-    onProgressUpdate: ((T, Int, Float) -> Unit) = { _, _, _ -> },
-    onAllStepsComplete: (() -> Unit) = { }
 ) {
-
     Row(
         modifier = modifier
             .fillMaxWidth(),
@@ -225,23 +218,24 @@ fun <T : Stepper> SequentialProgress(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            (0 until state.currentStepIndex).forEach { index ->
-                val toShow = index >= state.currentStepIndex - previewCountLeft
-                val isCompleted = derivedStateOf { state.isStepCompleted(index) }
+            (0 until currentStepIndex).forEach { index ->
+                val toShow = derivedStateOf { index >= currentStepIndex - previewCountLeft }
+                val isCompleted =
+                    derivedStateOf { list[index].durationMS == list[index].elapsedTime.value }
 
                 key(index) {
                     ProgressDot(
                         isCompleted = isCompleted.value,
-                        toShow = toShow,
+                        toShow = toShow.value,
                         modifier = Modifier
                     )
                 }
             }
         }
 
-        if (state.totalSteps > 0 && state.currentStepIndex < state.totalSteps) {
+        if (list.isNotEmpty() && currentStepIndex < list.size) {
             ProgressConnector(
-                progress = { state.currentStepProgress },
+                progress = { list[currentStepIndex].progress.value },
                 modifier = Modifier.padding(4.dp).weight(1f)
             )
         }
@@ -250,12 +244,13 @@ fun <T : Stepper> SequentialProgress(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            (state.currentStepIndex until state.totalSteps).forEach { index ->
-                val isCurrent = index == state.currentStepIndex
+            (currentStepIndex until list.size).forEach { index ->
+                val isCurrent = index == currentStepIndex
                 val isUpcoming =
-                    index > state.currentStepIndex && index <= state.currentStepIndex + previewCountRight
+                    index > currentStepIndex && index <= currentStepIndex + previewCountRight
                 val toShow = isCurrent || isUpcoming
-                val isCompleted = derivedStateOf { state.isStepCompleted(index) }
+                val isCompleted =
+                    derivedStateOf { list[index].durationMS == list[index].elapsedTime.value }
 
                 key(index) {
                     ProgressDot(
