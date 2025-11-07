@@ -33,6 +33,9 @@ class WorkoutScreenViewModel(
     val programId: Int
 ) : ViewModel() {
 
+    private var timerJob: Job? = null
+    private val timeSource = TimeSource.Monotonic
+
     private val _state = MutableStateFlow(ExerciseScreenState())
     val state: StateFlow<ExerciseScreenState> = _state.asStateFlow()
 
