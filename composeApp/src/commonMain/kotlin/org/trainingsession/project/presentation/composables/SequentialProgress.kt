@@ -354,6 +354,7 @@ fun <T : Stepper> rememberSequentialProgressState(
 data class ExerciseStep(
     val name: String,
     override val durationMS: Long,
+    override val elapsedTime: State<Long> = mutableStateOf(0L)
 ) : Stepper
 
 @Preview
