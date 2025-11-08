@@ -24,6 +24,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,7 +38,6 @@ import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.trainingsession.project.presentation.composables.SequentialProgress
-import org.trainingsession.project.presentation.viewModels.AppStepper
 import org.trainingsession.project.presentation.viewModels.WorkoutScreenViewModel
 import org.trainingsession.project.resources.Restore
 import trainingsession.composeapp.generated.resources.Res
@@ -55,6 +56,25 @@ fun WorkoutPlayerScreen(
     )
 ) {
     val screenState = viewModel.state.collectAsStateWithLifecycle()
+
+    val formattedTime = remember {
+        derivedStateOf {
+            val currentStep = screenState.value.stepperList[screenState.value.currentIndex]
+            val timeLeftMs = currentStep.durationMS - currentStep.elapsedTime.value
+            val safeTimeMs = maxOf(0L, timeLeftMs)
+            val totalSeconds = safeTimeMs / 1000L
+            val minutes = (totalSeconds / 60) % 60
+            val seconds = totalSeconds % 60
+            val hours = totalSeconds / 3600
+            if (hours > 0) {
+                val remainingMinutes = minutes % 60
+                formatTimeKMP(hours, remainingMinutes, seconds)
+            } else {
+                formatTimeKMP(minutes, seconds)
+            }
+        }
+    }
+
 
     Scaffold(
         topBar = {
