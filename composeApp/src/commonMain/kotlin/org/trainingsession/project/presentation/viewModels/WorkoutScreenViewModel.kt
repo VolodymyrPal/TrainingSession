@@ -17,7 +17,6 @@ import org.koin.android.annotation.KoinViewModel
 import org.koin.core.annotation.InjectedParam
 import org.trainingsession.project.domain.models.Program
 import org.trainingsession.project.domain.repository.ProgramRepository
-import org.trainingsession.project.presentation.composables.SequentialProgressState
 import org.trainingsession.project.presentation.composables.Stepper
 import org.trainingsession.project.presentation.models.toPresentation
 import kotlin.coroutines.cancellation.CancellationException
@@ -39,7 +38,6 @@ class WorkoutScreenViewModel(
     private val _state = MutableStateFlow(ExerciseScreenState())
     val state: StateFlow<ExerciseScreenState> = _state.asStateFlow()
 
-    private lateinit var progressController: ProgressController<AppStepper>
 
     init {
         fetchProgram(programId)
@@ -48,28 +46,22 @@ class WorkoutScreenViewModel(
     private fun fetchProgram(programId: Int) {
         viewModelScope.launch {
             val program = repository.getProgram(programId)
-            AppLogger.d("program: ", "${state}")
 
-            _state.update {
-                it.copy(
-                    chosenProgram = program
-                )
-            }
-
-            val stepperList: List<AppStepper> = program.toPresentation().exercisePresentations.map { s ->
-                object : AppStepper() {
-                    override val durationMS: Long
-                        get() = s.durationSeconds.toLong() * 150
+            val stepperList: List<AppStepper> =
+                program.toPresentation().exercisePresentations.map { s ->
+                    AppStepper(
+                        durationMS = s.durationSeconds.toLong() * 60,
+                    )
                 }
-            }
-            val newProgressState = SequentialProgressState(stepperList)
-            progressController = ProgressController(newProgressState, viewModelScope)
 
             _state.update { currentState ->
                 currentState.copy(
                     programName = program.name,
                     chosenProgram = program,
-                    progressState = newProgressState,
+                    stepperList = stepperList,
+                    currentIndex = 0,
+                    isPlaying = false,
+                    isLoading = false
                 )
             }
         }
