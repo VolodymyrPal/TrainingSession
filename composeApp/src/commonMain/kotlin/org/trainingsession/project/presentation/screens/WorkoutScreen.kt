@@ -112,16 +112,25 @@ fun WorkoutPlayerScreen(
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(modifier = Modifier.fillMaxWidth()) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
                 SequentialProgress(
                     modifier = Modifier.fillMaxWidth(),
                     currentStepIndex = screenState.value.currentIndex,
                     list = screenState.value.stepperList
                 )
                 Text(
-                    text = "Упражнение ${screenState.value.currentIndex + 1} из ${screenState.value.stepperList.size}",
+                    text = "Упражнение ${screenState.value.currentIndex + 1} из ${screenState.value.stepperList}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                LeftTimeBar(
+                    modifier = Modifier.fillMaxWidth(),
+                    timeLeft = formattedTime.value
                 )
             }
 
