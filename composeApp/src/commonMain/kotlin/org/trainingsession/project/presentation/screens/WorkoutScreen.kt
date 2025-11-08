@@ -263,10 +263,29 @@ fun WorkoutPlayerScreen(
     }
 }
 
-fun formatTime(seconds: Int): String {
-    val mins = seconds / 60
-    val secs = seconds % 60
-    val formattedMins = mins.toString().padStart(2, '0')
-    val formattedSecs = secs.toString().padStart(2, '0')
-    return "$formattedMins:$formattedSecs"
+@Composable
+fun LeftTimeBar(
+    modifier: Modifier = Modifier,
+    timeLeft: String,
+) {
+    Text(
+        modifier = modifier,
+        textAlign = TextAlign.Center,
+        text = timeLeft,
+        style = MaterialTheme.typography.titleLarge,
+        color = MaterialTheme.colorScheme.onSurfaceVariant
+    )
+}
+
+fun formatTimeKMP(minutes: Long, seconds: Long): String {
+    val minutesString = minutes.toString().padStart(2, '0')
+    val secondsString = seconds.toString().padStart(2, '0')
+    return "$minutesString:$secondsString"
+}
+
+fun formatTimeKMP(hours: Long, minutes: Long, seconds: Long): String {
+    val hoursString = hours.toString().padStart(2, '0')
+    val minutesString = minutes.toString().padStart(2, '0')
+    val secondsString = seconds.toString().padStart(2, '0')
+    return "$hoursString:$minutesString:$secondsString"
 }
