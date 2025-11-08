@@ -204,8 +204,8 @@ class SequentialProgressState<T : Stepper>(val steps: List<T>, initialStepIndex:
 fun SequentialProgress(
     list: List<AppStepper> = emptyList(),
     currentStepIndex: Int = 0,
-    previewCountRight: Int = 2,
-    previewCountLeft: Int = 1,
+    previewCountRight: Int = 1,
+    previewCountLeft: Int = 0,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -272,8 +272,10 @@ fun ProgressConnector(
     primaryColor: Color = MaterialTheme.colorScheme.primary,
     surfaceColor: Color = MaterialTheme.colorScheme.surfaceVariant
 ) {
+    val progress = { progress().coerceIn(0f, 1f) }
+
     Canvas(modifier.height(lineHeight).width(IntrinsicSize.Max)) {
-        val progressWidth = size.width * progress().coerceIn(0f, 1f)
+        val progressWidth = size.width * progress()
 
         drawLine(
             color = surfaceColor,
@@ -282,10 +284,9 @@ fun ProgressConnector(
             strokeWidth = size.height,
             cap = StrokeCap.Round
         )
-        val safeProgress = progress().coerceIn(0f, 1f)
         val startFraction = 0.2f
         val endFraction = 0.7f
-        val scaledFraction = startFraction + (endFraction - startFraction) * safeProgress
+        val scaledFraction = startFraction + (endFraction - startFraction) * progress()
 
         if (progressWidth > 0) {
             drawLine(
@@ -305,7 +306,7 @@ fun ProgressDot(
     toShow: Boolean,
     modifier: Modifier = Modifier,
     size: Dp = 8.dp,
-    lineWidth: Dp = 2.dp,
+    lineWidth: Dp = 3.dp,
     primaryColor: Color = MaterialTheme.colorScheme.primary,
     surfaceColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)
 ) {
@@ -410,24 +411,8 @@ fun ProgressPreview() {
 
                 SequentialProgress(
                     modifier = Modifier.fillMaxWidth(),
-                    state = state,
                     previewCountRight = 2,
                     previewCountLeft = 2,
-                    onStepStart = { step, index ->
-                        println("Started: ${step.name} (index: $index)")
-                    },
-                    onStepComplete = { step, index ->
-                        println("Completed: ${step.name} (index: $index)")
-                    },
-                    onStepChange = { step, index ->
-                        println("Changed to: ${step?.name} (index: $index)")
-                    },
-                    onProgressUpdate = { step, index, progress ->
-                        // println("Progress: ${step.name} - $progress")
-                    },
-                    onAllStepsComplete = {
-                        println("All steps completed!")
-                    }
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
