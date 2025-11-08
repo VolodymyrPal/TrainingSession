@@ -94,11 +94,12 @@ class WorkoutScreenViewModel(
     }
 }
 
-data class AppStepper(
+class AppStepper(
     override val durationMS: Long = 10L,
-    override val elapsedTime: MutableState<Long> = mutableLongStateOf(0),
+) : Stepper {
+    override val elapsedTime: MutableState<Long> = mutableLongStateOf(0)
     val progress: MutableState<Float> = mutableFloatStateOf(0f)
-) : Stepper
+}
 
 data class ExerciseScreenState(
     val programName: String = "",
@@ -108,7 +109,6 @@ data class ExerciseScreenState(
         name = "",
         programExercises = emptyList()
     ),
-    val progressState: SequentialProgressState<AppStepper> = SequentialProgressState(emptyList()),
     val currentIndex: Int = 0,
     val isPlaying: Boolean = false,
     val isLoading: Boolean = true,
