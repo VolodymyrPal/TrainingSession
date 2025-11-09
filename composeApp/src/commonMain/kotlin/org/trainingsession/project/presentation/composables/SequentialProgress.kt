@@ -19,16 +19,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.listSaver
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -42,175 +35,25 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.trainingsession.project.domain.models.Program
+import org.trainingsession.project.presentation.models.ExercisePresentation
+import org.trainingsession.project.presentation.models.Stepper
 import org.trainingsession.project.presentation.theme.AppTheme
-import org.trainingsession.project.presentation.viewModels.AppStepper
+import org.trainingsession.project.presentation.viewModels.ExerciseScreenState
 import kotlin.time.ExperimentalTime
-
-interface Stepper {
-    val durationMS: Long
-    val elapsedTime: State<Long>
-}
-
-@Stable
-class SequentialProgressState<T : Stepper>(val steps: List<T>, initialStepIndex: Int = 0) {
-
-    companion object {
-        fun <T : Stepper> Saver(steps: List<T>): Saver<SequentialProgressState<T>, Any> {
-            return listSaver(
-                save = { state ->
-                    listOf(
-                        state.currentStepIndex,
-                        state.isPlaying,
-                        state._stepStates.map { it.progress.value }.toFloatArray(),
-                        state._stepStates.map { it.elapsedTime.value }.toLongArray()
-                    )
-                },
-                restore = {
-                    @Suppress("UNCHECKED_CAST")
-                    val index = it[0] as Int
-                    val isPlaying = it[1] as Boolean
-                    val progresses = it[2] as FloatArray
-                    val elapsedTimes = it[3] as LongArray
-
-                    SequentialProgressState(steps, index).apply {
-                        _isPlaying.value = isPlaying
-                        progresses.forEachIndexed { i, progress ->
-                            _stepStates.getOrNull(i)?.progress?.value = progress
-                        }
-                        elapsedTimes.forEachIndexed { i, time ->
-                            _stepStates.getOrNull(i)?.elapsedTime?.value = time
-                        }
-                    }
-                }
-            )
-        }
-    }
-
-    private val _currentStepIndex = mutableStateOf(
-        initialStepIndex.coerceIn(
-            0,
-            steps.lastIndex.coerceAtLeast(0)
-        )
-    )
-    val currentStepIndex: Int get() = _currentStepIndex.value
-
-    private val _isPlaying = mutableStateOf(false)
-    val isPlaying: Boolean get() = _isPlaying.value
-
-    private val _stepStates = steps.map { PerStepState() }
-
-    fun getProgress(index: Int): Float = _stepStates.getOrNull(index)?.progress?.value ?: 0f
-    fun getElapsedTime(index: Int): Long = _stepStates.getOrNull(index)?.elapsedTime?.value ?: 0L
-    fun isStepCompleted(index: Int): Boolean = getProgress(index) >= 1f
-
-    val currentStepData: T? get() = steps.getOrNull(_currentStepIndex.value)
-    val currentStepProgress: Float get() = getProgress(_currentStepIndex.value)
-    val currentStepElapsedTime: Long get() = getElapsedTime(_currentStepIndex.value)
-
-    internal fun setProgress(index: Int, progress: Float) {
-        _stepStates.getOrNull(index)?.progress?.value = progress.coerceIn(0f, 1f)
-    }
-
-    internal fun setElapsedTime(index: Int, time: Long) {
-        val duration = steps.getOrNull(index)?.durationMS ?: 0L
-        _stepStates.getOrNull(index)?.elapsedTime?.value =
-            time.coerceAtLeast(0L).coerceAtMost(duration)
-    }
-
-    val hasNextStep: Boolean get() = _currentStepIndex.value < steps.size - 1
-    val hasPreviousStep: Boolean get() = _currentStepIndex.value > 0
-    val allStepsCompleted: Boolean get() = _stepStates.all { it.progress.value == 1f } // Обновлено
-    val totalSteps: Int get() = steps.size
-
-    fun play() {
-        if (_currentStepIndex.value < steps.size) {
-            _isPlaying.value = true
-        }
-    }
-
-    fun pause() {
-        _isPlaying.value = false
-    }
-
-    fun stop() {
-        _isPlaying.value = false
-        reset()
-    }
-
-    fun reset() {
-        _isPlaying.value = false
-        _currentStepIndex.value = 0
-        _stepStates.forEach { it.reset() }
-    }
-
-    fun resetCurrentStep() {
-        _isPlaying.value = false
-        _stepStates.getOrNull(_currentStepIndex.value)?.reset()
-    }
-
-    fun next() {
-        if (hasNextStep) {
-            _currentStepIndex.value++
-        }
-    }
-
-    fun previous() {
-        if (hasPreviousStep) {
-            _currentStepIndex.value--
-        }
-    }
-
-    fun seekToStep(stepIndex: Int) {
-        if (stepIndex in 0 until steps.size) {
-            _currentStepIndex.value = stepIndex
-            _isPlaying.value = false
-        }
-    }
-
-    internal fun onStepComplete() {
-        setProgress(currentStepIndex, 1f)
-        if (hasNextStep) {
-            next()
-        } else {
-            _isPlaying.value = false
-        }
-    }
-
-    fun playPause() {
-        if (_isPlaying.value) {
-            pause()
-        } else {
-            play()
-        }
-    }
-
-    @Stable
-    private class PerStepState(
-        initialProgress: Float = 0f,
-        initialTime: Long = 0L
-    ) {
-        val progress = mutableStateOf(initialProgress)
-        val elapsedTime = mutableStateOf(initialTime)
-
-        fun reset() {
-            progress.value = 0f
-            elapsedTime.value = 0L
-        }
-    }
-}
 
 @OptIn(ExperimentalTime::class)
 @Composable
 fun SequentialProgress(
-    list: List<AppStepper> = emptyList(),
+    list: List<Stepper> = emptyList(),
     currentStepIndex: Int = 0,
     previewCountRight: Int = 1,
     previewCountLeft: Int = 0,
     modifier: Modifier = Modifier,
+    lineHeight: Dp = 4.dp
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -236,7 +79,8 @@ fun SequentialProgress(
         if (list.isNotEmpty() && currentStepIndex < list.size) {
             ProgressConnector(
                 progress = { list[currentStepIndex].progress.value },
-                modifier = Modifier.padding(4.dp).weight(1f)
+                modifier = Modifier.padding(4.dp).weight(1f),
+                lineHeight = lineHeight
             )
         }
 
@@ -342,40 +186,39 @@ fun ProgressDot(
     }
 }
 
-@Composable
-fun <T : Stepper> rememberSequentialProgressState(
-    steps: List<T>,
-    initialStepIndex: Int = 0
-): SequentialProgressState<T> {
-    return rememberSaveable(steps, saver = SequentialProgressState.Saver(steps)) {
-        SequentialProgressState(steps, initialStepIndex)
-    }
-}
-
-data class ExerciseStep(
-    val name: String,
-    override val durationMS: Long,
-    override val elapsedTime: State<Long> = mutableStateOf(0L)
-) : Stepper
-
 @Preview
 @Composable
 fun ProgressPreview() {
     AppTheme {
         Box(modifier = Modifier.fillMaxSize()) {
-            val steps = remember {
-                listOf(
-                    ExerciseStep("Warm up", 5000L),
-                    ExerciseStep("Push ups", 3000L),
-                    ExerciseStep("Rest", 1000L),
-                    ExerciseStep("Squats", 3000L),
-                    ExerciseStep("Rest", 1000L),
-                    ExerciseStep("Plank", 2000L),
-                    ExerciseStep("Cool down", 2000L)
+            var state = ExerciseScreenState(
+                programName = "",
+                chosenProgram = Program(
+                    id = 0,
+                    description = "",
+                    name = "",
+                    programExercises = emptyList()
+                ),
+                currentIndex = 0,
+                isPlaying = false,
+                isLoading = true,
+                stepperList = listOf(
+                    ExercisePresentation(
+                        name = "Exercise",
+                        durationSeconds = 60,
+                        description = "Do hard, not dumb",
+                    ),
+                    ExercisePresentation(
+                        name = "Something",
+                        durationSeconds = 60,
+                        description = "Do smart, not hard"
+                    )
                 )
-            }
-
-            val state = rememberSequentialProgressState(steps = steps)
+            )
+            state.stepperList[0].progress.value = 0.5f
+            state.stepperList[1].progress.value = 0.7f
+            state.stepperList[1].elapsedTime.value = 3000
+            state.stepperList[0].elapsedTime.value = 3000
 
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -387,14 +230,14 @@ fun ProgressPreview() {
                         .padding(vertical = 8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    val currentStep = state.currentStepData
+                    val currentStep = state.stepperList.random()
                     if (currentStep != null) {
                         Text(
-                            text = "${currentStep.name} (${state.currentStepIndex + 1}/${state.totalSteps})",
+                            text = "${currentStep.name} (${state.currentIndex + 1}/${state.stepperList.size})",
                             style = MaterialTheme.typography.headlineMedium
                         )
                         Text(
-                            text = "${state.currentStepElapsedTime}ms / ${currentStep.durationMS}ms (${(state.currentStepProgress * 100).toInt()}%)",
+                            text = "${currentStep.elapsedTime.value}ms / ${currentStep.durationMS}ms (${(currentStep.progress.value * 100).toInt()}%)",
                             style = MaterialTheme.typography.bodyMedium
                         )
                     } else {
@@ -411,6 +254,7 @@ fun ProgressPreview() {
 
                 SequentialProgress(
                     modifier = Modifier.fillMaxWidth(),
+                    list = state.stepperList,
                     previewCountRight = 2,
                     previewCountLeft = 2,
                 )
@@ -420,19 +264,17 @@ fun ProgressPreview() {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Button(onClick = { state.previous() }) {
+                    Button(onClick = { }) {
                         Text("Previous")
                     }
                     Button(onClick = {
-                        if (state.isPlaying) state.pause() else state.play()
+                        if (state.isPlaying) {
+                            state = state.copy(isPlaying = false)
+                        } else {
+                            state = state.copy(isPlaying = true)
+                        }
                     }) {
                         Text(if (state.isPlaying) "Pause" else "Play")
-                    }
-                    Button(onClick = { state.stop() }) {
-                        Text("Stop")
-                    }
-                    Button(onClick = { state.next() }) {
-                        Text("Next")
                     }
                 }
 
@@ -441,12 +283,7 @@ fun ProgressPreview() {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Button(onClick = { state.resetCurrentStep() }) {
-                        Text("Reset Current")
-                    }
-                    Button(onClick = { state.seekToStep(3) }) {
-                        Text("Go to Step 4")
-                    }
+
                 }
             }
         }
