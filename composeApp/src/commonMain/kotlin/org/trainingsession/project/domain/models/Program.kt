@@ -157,7 +157,7 @@ val program2 = Program(
     programExercises = listOf(
         ProgramExercise(
             id = 201, // Уникальный ID
-            name = "'Ягодичный мостик'",
+            name = "Ягодичный мостик",
             duration = 50.seconds,
             description = "Активация ягодиц для стабилизации поясницы.",
             primaryFocus = "Ягодицы, Стабилизация таза",
@@ -174,7 +174,7 @@ val program2 = Program(
         ),
         ProgramExercise(
             id = 202, // Уникальный ID
-            name = "'Собака-птица' (Bird-Dog)",
+            name = "Собака-птица",
             duration = 50.seconds,
             description = "Упражнение на анти-ротацию и глубокий кор.",
             primaryFocus = "Глубокий кор, Стабилизаторы",
@@ -242,7 +242,7 @@ val program2 = Program(
         ),
         ProgramExercise(
             id = 206, // Уникальный ID
-            name = "'Супермен' (Superman Lift)",
+            name = "Супермен",
             duration = 50.seconds,
             description = "Активация разгибателей спины и мышц поясницы.",
             primaryFocus = "Разгибатели спины, Мышцы поясницы",
