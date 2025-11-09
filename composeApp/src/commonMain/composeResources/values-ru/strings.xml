@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Training Session</string>
-    <string name="select_program">Выбери тренировку</string>
+    <string name="select_program">Выберите тренировку</string>
+    <string name="indexFrom">Упражнение %1$s из %2$s</string>
 </resources>

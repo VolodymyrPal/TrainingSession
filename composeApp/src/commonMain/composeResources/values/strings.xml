@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Training Session</string>
     <string name="select_program">Choose program</string>
+    <string name="indexFrom">Exercise %1$s of %2$s</string>
 </resources>
