@@ -1,22 +1,26 @@
 package org.trainingsession.project.presentation.screens
 
 import Square
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -28,13 +32,14 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.trainingsession.project.presentation.composables.SequentialProgress
@@ -43,17 +48,17 @@ import org.trainingsession.project.resources.Restore
 import trainingsession.composeapp.generated.resources.Res
 import trainingsession.composeapp.generated.resources.arrow_back
 import trainingsession.composeapp.generated.resources.arrow_forward
+import trainingsession.composeapp.generated.resources.indexFrom
 import trainingsession.composeapp.generated.resources.pause
 import trainingsession.composeapp.generated.resources.play
+import kotlin.math.ceil
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WorkoutPlayerScreen(
-    onBackClick: () -> Unit,
-    viewModel: WorkoutScreenViewModel = koinViewModel(
-        parameters = { parametersOf(1) }
-    )
+    onBackClick: () -> Unit, viewModel: WorkoutScreenViewModel = koinViewModel(
+        parameters = { parametersOf(1) })
 ) {
     val screenState = viewModel.state.collectAsStateWithLifecycle()
 
@@ -62,7 +67,8 @@ fun WorkoutPlayerScreen(
             val currentStep = screenState.value.stepperList[screenState.value.currentIndex]
             val timeLeftMs = currentStep.durationMS - currentStep.elapsedTime.value
             val safeTimeMs = maxOf(0L, timeLeftMs)
-            val totalSeconds = safeTimeMs / 1000L
+            val totalSecondsLong = safeTimeMs / 1000.0
+            val totalSeconds = ceil(totalSecondsLong).toLong()
             val minutes = (totalSeconds / 60) % 60
             val seconds = totalSeconds % 60
             val hours = totalSeconds / 3600
@@ -74,6 +80,8 @@ fun WorkoutPlayerScreen(
             }
         }
     }
+    val pagerState = rememberPagerState(
+        0, 0f, pageCount = { screenState.value.stepperList.size })
 
 
     Scaffold(
@@ -82,10 +90,10 @@ fun WorkoutPlayerScreen(
                 title = {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = screenState.value.programName,
-                        style = MaterialTheme.typography.titleLarge,
-                        textAlign = TextAlign.Start,
-                        color = MaterialTheme.colorScheme.primary,
+                        text = "Back to programs",
+                        style = MaterialTheme.typography.titleSmall,
+                        textAlign = TextAlign.Unspecified,
+                        color = MaterialTheme.colorScheme.primary
                     )
                 },
                 navigationIcon = {
@@ -96,20 +104,14 @@ fun WorkoutPlayerScreen(
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
+                }, colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent
                 )
             )
-        },
-        containerColor = Color.Transparent,
-        contentColor = Color.Transparent
+        }, containerColor = Color.Transparent, contentColor = Color.Transparent
     ) { padding ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(24.dp),
+            modifier = Modifier.fillMaxSize().padding(padding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Column(
@@ -123,22 +125,26 @@ fun WorkoutPlayerScreen(
                     list = screenState.value.stepperList
                 )
                 Text(
-                    text = "Упражнение ${screenState.value.currentIndex + 1} из ${screenState.value.stepperList}",
+                    text = stringResource(
+                        Res.string.indexFrom,
+                        screenState.value.currentIndex + 1,
+                        screenState.value.stepperList.size
+                    ),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
                 LeftTimeBar(
-                    modifier = Modifier.fillMaxWidth(),
-                    timeLeft = formattedTime.value
+                    modifier = Modifier.fillMaxWidth(), timeLeft = formattedTime.value
                 )
             }
 
-            Spacer(modifier = Modifier.weight(1f))
 
             Card(
-                modifier = Modifier.size(280.dp),
-                shape = RoundedCornerShape(24.dp),
+                modifier = Modifier.padding(24.dp).weight(1f),
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 4.dp
+                ),
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer
                 )
@@ -146,47 +152,57 @@ fun WorkoutPlayerScreen(
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.Top
                 ) {
-                    Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "Push Ups",//currentExercise.name,
+                        modifier = Modifier.fillMaxWidth().padding(4.dp),
+                        text = screenState.value.stepperList[screenState.value.currentIndex].name,
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Try to do it fast",//currentExercise.description,
-                        style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
-                        modifier = Modifier.padding(horizontal = 24.dp)
-                    )
-                    Spacer(modifier = Modifier.height(24.dp))
-                    Text(
-                        text = "Nice", //progressState.currentStepElapsedTime.toString(),
-                        style = MaterialTheme.typography.displayLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontSize = 56.sp
-                    )
+                    HorizontalPager(
+                        modifier = Modifier.weight(1f),
+                        state = pagerState,
+
+                        ) {
+                        Text(
+                            text = screenState.value.stepperList[screenState.value.currentIndex].description,
+                            style = MaterialTheme.typography.bodyMedium,
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
+                            modifier = Modifier.padding(horizontal = 24.dp)
+                        )
+                    }
+                    Row(
+                        Modifier.wrapContentHeight().fillMaxWidth().padding(bottom = 8.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        repeat(pagerState.pageCount) { iteration ->
+                            val color =
+                                if (pagerState.currentPage == iteration) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(
+                                    alpha = 0.4f
+                                )
+                            Box(
+                                modifier = Modifier.padding(2.dp).clip(CircleShape)
+                                    .background(color).size(8.dp)
+                            )
+                        }
+                    }
+
                 }
             }
 
-            Spacer(modifier = Modifier.weight(1f))
-
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().wrapContentHeight(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.Bottom
             ) {
                 OutlinedButton(
                     onClick = {
                         viewModel.previousStep()
-                    },
-                    enabled = screenState.value.currentIndex > 0,
+                    }, enabled = screenState.value.currentIndex > 0,
                     modifier = Modifier.size(64.dp)
                 ) {
                     Icon(
@@ -202,8 +218,7 @@ fun WorkoutPlayerScreen(
                 ) {
                     Row {
                         IconButton(
-                            onClick = { viewModel.resetCurrentStep() },
-                            modifier = Modifier
+                            onClick = { viewModel.resetCurrentStep() }, modifier = Modifier
                         ) {
                             Icon(
                                 Restore,
@@ -214,8 +229,7 @@ fun WorkoutPlayerScreen(
                         }
 
                         IconButton(
-                            onClick = { viewModel.resetWorkout() },
-                            modifier = Modifier
+                            onClick = { viewModel.resetWorkout() }, modifier = Modifier
                         ) {
                             Icon(
                                 Square,
@@ -226,21 +240,26 @@ fun WorkoutPlayerScreen(
                         }
                     }
 
-                    FilledTonalButton(
+                    FilledIconButton(
                         onClick = { viewModel.playPause() },
-                        modifier = Modifier.size(80.dp)
+                        modifier = Modifier.size(80.dp),
+                        shape = CircleShape,
+                        colors = IconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.primary,
+                            disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+                            disabledContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.3f)
+                        )
                     ) {
                         Icon(
                             if (screenState.value.isPlaying) painterResource(Res.drawable.pause)
                             else painterResource(Res.drawable.play),
                             if (screenState.value.isPlaying) "Играть" else "Пауза",
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier.fillMaxSize().padding(24.dp),
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
-
-
 
                 OutlinedButton(
                     onClick = {
@@ -257,8 +276,6 @@ fun WorkoutPlayerScreen(
                     )
                 }
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
