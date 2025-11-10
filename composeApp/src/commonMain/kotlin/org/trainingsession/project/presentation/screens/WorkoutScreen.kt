@@ -312,6 +312,34 @@ fun LeftTimeBar(
     )
 }
 
+@Preview
+@Composable
+fun WorkoutScrenPreview() {
+    AppTheme {
+        WorkoutPlayerScreen(
+            {},
+            mutableStateOf(
+                ExerciseScreenState(
+                    currentIndex = 0,
+                    stepperList = listOf(
+                        ExercisePresentation(
+                            "Base exercise",
+                            10,
+                            "Base description"
+                        ),
+                        ExercisePresentation(
+                            "Base exercise",
+                            10,
+                            "Base description"
+                        )
+                    )
+                )
+            )
+        )
+    }
+}
+
+
 fun formatTimeKMP(minutes: Long, seconds: Long): String {
     val minutesString = minutes.toString().padStart(2, '0')
     val secondsString = seconds.toString().padStart(2, '0')
