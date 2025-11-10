@@ -79,7 +79,7 @@ fun SequentialProgress(
         if (list.isNotEmpty() && currentStepIndex < list.size) {
             ProgressConnector(
                 progress = { list[currentStepIndex].progress.value },
-                modifier = Modifier.padding(4.dp).weight(1f),
+                modifier = Modifier.padding(lineHeight).weight(1f),
                 lineHeight = lineHeight
             )
         }
@@ -140,6 +140,13 @@ fun ProgressConnector(
                 strokeWidth = size.height * scaledFraction,
                 cap = StrokeCap.Round
             )
+            if (progress() < 1f) {
+                drawCircle(
+                    color = primaryColor,
+                    radius = lineHeight.value,
+                    center = Offset(progressWidth, size.height/2)
+                )
+            }
         }
     }
 }
