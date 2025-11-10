@@ -301,12 +301,12 @@ fun WorkoutPlayerScreen(
 @Composable
 fun LeftTimeBar(
     modifier: Modifier = Modifier,
-    timeLeft: String,
+    timeLeft: State<String>,
 ) {
     Text(
         modifier = modifier,
         textAlign = TextAlign.Center,
-        text = timeLeft,
+        text = timeLeft.value,
         style = MaterialTheme.typography.titleLarge,
         color = MaterialTheme.colorScheme.onSurfaceVariant
     )
