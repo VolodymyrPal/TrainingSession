@@ -67,11 +67,12 @@ fun WorkoutPlayerScreen(
     ),
     event: (WorkoutScreenViewModel.SalesPageEvent) -> Unit = {},
 ) {
-    val screenState = viewModel.state.collectAsStateWithLifecycle()
 
     val formattedTime = remember {
         derivedStateOf {
-            val currentStep = screenState.value.stepperList[screenState.value.currentIndex]
+            val currentStep =
+                screenState.value.stepperList.getOrNull(screenState.value.currentIndex)
+                    ?: return@derivedStateOf "00:00"
             val timeLeftMs = currentStep.durationMS - currentStep.elapsedTime.value
             val safeTimeMs = maxOf(0L, timeLeftMs)
             val totalSecondsLong = safeTimeMs / 1000.0
@@ -118,7 +119,7 @@ fun WorkoutPlayerScreen(
         }, containerColor = Color.Transparent, contentColor = Color.Transparent
     ) { padding ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(padding),
+            modifier = Modifier.fillMaxSize().padding(padding).padding(bottom = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Column(
@@ -127,9 +128,9 @@ fun WorkoutPlayerScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 SequentialProgress(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                     currentStepIndex = screenState.value.currentIndex,
-                    list = screenState.value.stepperList
+                    list = screenState.value.stepperList,
                 )
                 Text(
                     text = stringResource(
@@ -142,13 +143,14 @@ fun WorkoutPlayerScreen(
                 )
 
                 LeftTimeBar(
-                    modifier = Modifier.fillMaxWidth(), timeLeft = formattedTime.value
+                    modifier = Modifier.fillMaxWidth(),
+                    timeLeft = formattedTime
                 )
             }
 
 
             Card(
-                modifier = Modifier.padding(24.dp).weight(1f),
+                modifier = Modifier.padding(12.dp).weight(1f),
                 elevation = CardDefaults.cardElevation(
                     defaultElevation = 4.dp
                 ),
@@ -163,7 +165,8 @@ fun WorkoutPlayerScreen(
                 ) {
                     Text(
                         modifier = Modifier.fillMaxWidth().padding(4.dp),
-                        text = screenState.value.stepperList[screenState.value.currentIndex].name,
+                        text = screenState.value.stepperList.getOrNull(screenState.value.currentIndex)?.name
+                            ?: "Placeholder",
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
@@ -172,10 +175,10 @@ fun WorkoutPlayerScreen(
                     HorizontalPager(
                         modifier = Modifier.weight(1f),
                         state = pagerState,
-
-                        ) {
+                    ) {
                         Text(
-                            text = screenState.value.stepperList[screenState.value.currentIndex].description,
+                            text = screenState.value.stepperList.getOrNull(screenState.value.currentIndex)?.description
+                                ?: "Placeholder text",
                             style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Center,
                             color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
@@ -208,8 +211,9 @@ fun WorkoutPlayerScreen(
             ) {
                 OutlinedButton(
                     onClick = {
-                        viewModel.previousStep()
-                    }, enabled = screenState.value.currentIndex > 0,
+                        event(WorkoutScreenViewModel.SalesPageEvent.PreviousStep)
+                    },
+                    enabled = screenState.value.currentIndex > 0,
                     modifier = Modifier.size(64.dp)
                 ) {
                     Icon(
@@ -225,7 +229,9 @@ fun WorkoutPlayerScreen(
                 ) {
                     Row {
                         IconButton(
-                            onClick = { viewModel.resetCurrentStep() }, modifier = Modifier
+                            onClick = {
+                                event(WorkoutScreenViewModel.SalesPageEvent.ResetCurrentStep)
+                            }, modifier = Modifier
                         ) {
                             Icon(
                                 Restore,
@@ -236,7 +242,10 @@ fun WorkoutPlayerScreen(
                         }
 
                         IconButton(
-                            onClick = { viewModel.resetWorkout() }, modifier = Modifier
+                            onClick = {
+                                event(WorkoutScreenViewModel.SalesPageEvent.ResetWorkout)
+                            },
+                            modifier = Modifier
                         ) {
                             Icon(
                                 Square,
@@ -248,8 +257,10 @@ fun WorkoutPlayerScreen(
                     }
 
                     FilledIconButton(
-                        onClick = { viewModel.playPause() },
-                        modifier = Modifier.size(80.dp),
+                        onClick = {
+                            event(WorkoutScreenViewModel.SalesPageEvent.PlayPause)
+                        },
+                        modifier = Modifier.wrapContentSize().size(80.dp),
                         shape = CircleShape,
                         colors = IconButtonColors(
                             containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -270,7 +281,7 @@ fun WorkoutPlayerScreen(
 
                 OutlinedButton(
                     onClick = {
-                        viewModel.nextStep()
+                        event(WorkoutScreenViewModel.SalesPageEvent.NextStep)
                     },
                     enabled = screenState.value.currentIndex < screenState.value.stepperList.size - 1,
                     modifier = Modifier.size(64.dp)
