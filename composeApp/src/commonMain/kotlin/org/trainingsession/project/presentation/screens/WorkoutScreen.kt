@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -28,7 +29,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,12 +40,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.trainingsession.project.presentation.composables.SequentialProgress
+import org.trainingsession.project.presentation.models.ExercisePresentation
+import org.trainingsession.project.presentation.theme.AppTheme
+import org.trainingsession.project.presentation.viewModels.ExerciseScreenState
 import org.trainingsession.project.presentation.viewModels.WorkoutScreenViewModel
 import org.trainingsession.project.resources.Restore
 import trainingsession.composeapp.generated.resources.Res
@@ -57,8 +61,11 @@ import kotlin.math.ceil
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WorkoutPlayerScreen(
-    onBackClick: () -> Unit, viewModel: WorkoutScreenViewModel = koinViewModel(
-        parameters = { parametersOf(1) })
+    onBackClick: () -> Unit,
+    screenState: State<ExerciseScreenState<ExercisePresentation>> = mutableStateOf(
+        ExerciseScreenState()
+    ),
+    event: (WorkoutScreenViewModel.SalesPageEvent) -> Unit = {},
 ) {
     val screenState = viewModel.state.collectAsStateWithLifecycle()
 
