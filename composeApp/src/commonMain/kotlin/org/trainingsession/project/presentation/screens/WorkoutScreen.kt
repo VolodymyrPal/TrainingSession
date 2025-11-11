@@ -1,6 +1,7 @@
 package org.trainingsession.project.presentation.screens
 
 import Square
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -176,13 +177,10 @@ fun WorkoutPlayerScreen(
                         modifier = Modifier.weight(1f),
                         state = pagerState,
                     ) {
-                        Text(
-                            text = screenState.value.stepperList.getOrNull(screenState.value.currentIndex)?.description
-                                ?: "Placeholder text",
-                            style = MaterialTheme.typography.bodyMedium,
-                            textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
-                            modifier = Modifier.padding(horizontal = 24.dp)
+                        Image(
+                            modifier = Modifier.fillMaxSize(),
+                            painter = painterResource(Res.drawable._5231197942817951707_Photoroom),
+                            contentDescription = "Placeholder image"
                         )
                     }
                     Row(
