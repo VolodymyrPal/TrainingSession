@@ -36,10 +36,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -51,6 +58,7 @@ import org.trainingsession.project.presentation.viewModels.ExerciseScreenState
 import org.trainingsession.project.presentation.viewModels.WorkoutScreenViewModel
 import org.trainingsession.project.resources.Restore
 import trainingsession.composeapp.generated.resources.Res
+import trainingsession.composeapp.generated.resources._5231197942817951707_Photoroom
 import trainingsession.composeapp.generated.resources.arrow_back
 import trainingsession.composeapp.generated.resources.arrow_forward
 import trainingsession.composeapp.generated.resources.indexFrom
@@ -117,10 +125,15 @@ fun WorkoutPlayerScreen(
                     containerColor = Color.Transparent
                 )
             )
-        }, containerColor = Color.Transparent, contentColor = Color.Transparent
+        },
+        containerColor = Color.Transparent,
+        contentColor = Color.Transparent
     ) { padding ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(padding).padding(bottom = 8.dp),
+            modifier = Modifier.fillMaxSize().padding(
+                bottom = padding.calculateBottomPadding(),
+                top = padding.calculateTopPadding()
+            ).padding(bottom = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Column(
@@ -151,9 +164,9 @@ fun WorkoutPlayerScreen(
 
 
             Card(
-                modifier = Modifier.padding(12.dp).weight(1f),
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = 4.dp
+                modifier = Modifier.fillMaxWidth().weight(1f).bottomFadingEdge(
+                    length = 20.dp,
+                    edgeColor = MaterialTheme.colorScheme.primaryContainer
                 ),
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer
