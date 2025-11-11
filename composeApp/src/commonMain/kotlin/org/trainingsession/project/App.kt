@@ -50,7 +50,7 @@ fun App() {
             }
 
             NavHost(
-                modifier = Modifier.safeContentPadding().fillMaxSize(),
+                modifier = Modifier.fillMaxSize(), //safeContentPadding()
                 navController = navController,
                 startDestination = AppRoutes.ProgramListScreen
             ) {
