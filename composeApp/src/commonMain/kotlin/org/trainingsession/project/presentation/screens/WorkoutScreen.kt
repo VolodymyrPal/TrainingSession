@@ -296,6 +296,40 @@ fun WorkoutPlayerScreen(
     }
 }
 
+fun Modifier.bottomFadingEdge(
+    length: Dp,
+    edgeColor: Color
+) = composed {
+    val lengthPx = with(LocalDensity.current) { length.toPx() }
+    this
+        .graphicsLayer { alpha = 0.99f }
+        .drawWithContent {
+            drawContent()
+            drawRect(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color.Black.copy(alpha = 0f),
+                        Color.Black.copy(alpha = 1f)
+                    ),
+                    startY = 0f,
+                    endY = lengthPx
+                ),
+                blendMode = BlendMode.DstIn
+            )
+            drawRect(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color.Black.copy(alpha = 1f),
+                        Color.Black.copy(alpha = 0f)
+                    ),
+                    startY = size.height - lengthPx,
+                    endY = size.height
+                ),
+                blendMode = BlendMode.DstIn
+            )
+        }
+}
+
 @Composable
 fun LeftTimeBar(
     modifier: Modifier = Modifier,
