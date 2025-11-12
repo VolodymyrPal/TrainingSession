@@ -101,7 +101,7 @@ class AppStepper(
     val progress: MutableState<Float> = mutableFloatStateOf(0f)
 }
 
-data class ExerciseScreenState(
+data class ExerciseScreenState<T: Stepper>(
     val programName: String = "",
     val chosenProgram: Program = Program(
         id = 0,
@@ -112,5 +112,5 @@ data class ExerciseScreenState(
     val currentIndex: Int = 0,
     val isPlaying: Boolean = false,
     val isLoading: Boolean = true,
-    val stepperList: List<AppStepper> = emptyList()
+    val stepperList: List<T> = emptyList()
 )
