@@ -2,7 +2,7 @@ package org.trainingsession.project.data.repository
 
 import org.koin.core.annotation.Single
 import org.trainingsession.project.domain.models.Program
-import org.trainingsession.project.domain.models.ProgramExercise
+import org.trainingsession.project.domain.models.Exercise
 import org.trainingsession.project.domain.models.provideProgramExercise
 import org.trainingsession.project.domain.models.providePrograms
 import org.trainingsession.project.domain.repository.ProgramRepository
@@ -19,7 +19,7 @@ class ProgramRepositoryImpl(
         return providePrograms()[id.coerceIn(0, providePrograms().size)] //TODO
     }
 
-    override fun getExercises(program: Program): ProgramExercise {
+    override fun getExercises(program: Program): Exercise {
         return provideProgramExercise()
     }
 

@@ -204,7 +204,7 @@ fun ProgressPreview() {
                     id = 0,
                     description = "",
                     name = "",
-                    programExercises = emptyList()
+                    exercises = emptyList()
                 ),
                 currentIndex = 0,
                 isPlaying = false,
