@@ -1,31 +1,31 @@
 package org.trainingsession.project.domain.models.muscles
 
-sealed interface UpperBodyPullingMuscle : MuscleGroupCategory {
+sealed interface UpperBodyPullingMuscle : MuscleGroup {
 
     val categoryName: String
         get() = "Upper Body Pulling Muscle"
 
-    data class BACK_LATS(
-        override val name: String = "Latissimus Dorsi" // Широчайшие мышцы спины (Lats)
-    ) : UpperBodyPullingMuscle
+    object BACK_LATS : UpperBodyPullingMuscle {
+        override val name: String = "Latissimus Dorsi"
+    } // Широчайшие мышцы спины (Lats)
 
-    data class BACK_UPPER(
-        override val name: String = "Upper/Mid Back" // Общее название для Ромбовидных и Трапециевидных
-    ) : UpperBodyPullingMuscle
+    object BACK_UPPER : UpperBodyPullingMuscle {
+        override val name: String = "Upper/Mid Back"
+    } // Общее название для Ромбовидных и Трапециевидных
 
-    data class SPINAL_ERECTORS(
+    object SPINAL_ERECTORS : UpperBodyPullingMuscle {
         override val name: String = "Spinal Erectors"
-    ) : UpperBodyPullingMuscle // Разгибатели спины (Поясница)
+    } // Разгибатели спины (Поясница)
 
-    data class DELTOIDS_POSTERIOR(
+    object DELTOIDS_POSTERIOR : UpperBodyPullingMuscle {
         override val name: String = "Posterior Deltoids"
-    ) : UpperBodyPullingMuscle // Дельтовидные (Задний пучок)
+    } // Дельтовидные (Задний пучок)
 
-    data class BICEPS(
+    object BICEPS : UpperBodyPullingMuscle {
         override val name: String = "Biceps"
-    ) : UpperBodyPullingMuscle
+    } // Бицепс
 
-    data class FOREARMS(
+    object FOREARMS : UpperBodyPullingMuscle {
         override val name: String = "Forearms"
-    ) : UpperBodyPullingMuscle // Мышцы предплечья
+    } // Мышцы предплечья
 }
