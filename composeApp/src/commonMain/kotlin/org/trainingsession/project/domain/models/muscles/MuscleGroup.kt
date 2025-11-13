@@ -1,5 +1,5 @@
 package org.trainingsession.project.domain.models.muscles
 
-sealed interface MuscleGroupCategory {
+sealed interface MuscleGroup {
     val name: String
 }
