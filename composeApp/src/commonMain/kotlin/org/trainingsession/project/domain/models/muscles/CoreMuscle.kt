@@ -1,19 +1,27 @@
 package org.trainingsession.project.domain.models.muscles
 
-sealed interface CoreMuscle : MuscleGroupCategory {
+sealed interface CoreMuscle : MuscleGroup {
 
     val categoryName: String
         get() = "Core Muscle"
 
-    data class ABS_RECTUS(
+    object ABS_RECTUS : CoreMuscle {
         override val name: String = "Rectus Abdominis"
-    ) : CoreMuscle // Прямая мышца живота
+    } // Прямая мышца живота
 
-    data class ABS_OBLIQUES(
+    object ABS_OBLIQUES : CoreMuscle {
         override val name: String = "Obliques"
-    ) : CoreMuscle        // Косые мышцы живота
+    } // Косые мышцы живота
 
-    data class ABS_TRANSVERSE(
+    object ABS_TRANSVERSE : CoreMuscle {
         override val name: String = "Transversus Abdominis"
-    ) : CoreMuscle       // Поперечная мышца живота (глубокий стабилизатор)
+    } // Поперечная мышца живота (глубокий стабилизатор)
+
+    object QUADRATUS_LUMBORUM : CoreMuscle {
+        override val name = "Quadratus Lumborum"
+    } // Квадратная мышца поясницы
+
+    object PELVIC_FLOOR : CoreMuscle {
+        override val name = "Pelvic Floor Muscles"
+    } // Мышцы тазового дна
 }
