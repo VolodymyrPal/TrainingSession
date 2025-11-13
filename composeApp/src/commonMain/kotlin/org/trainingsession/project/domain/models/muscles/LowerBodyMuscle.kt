@@ -1,31 +1,35 @@
 package org.trainingsession.project.domain.models.muscles
 
-sealed interface LowerBodyMuscle : MuscleGroupCategory {
+sealed interface LowerBodyMuscle : MuscleGroup {
 
     val categoryName: String
         get() = "Lower Body Muscle"
 
-    data class QUADRICEPS(
+    object QUADRICEPS : LowerBodyMuscle {
         override val name: String = "Quadriceps"
-    ) : LowerBodyMuscle // Передняя поверхность бедра
+    } // Передняя поверхность бедра
 
-    data class GLUTES(
-        override val name: String = "Glutes" // Или "Gluteal Muscles"
-    ) : LowerBodyMuscle // Ягодичные мышцы (Большая, Средняя, Малая)
+    object GLUTES : LowerBodyMuscle {
+        override val name: String = "Glutes"
+    } // Ягодичные мышцы (Большая, Средняя, Малая)
 
-    data class HAMSTRINGS(
+    object HAMSTRINGS : LowerBodyMuscle {
         override val name: String = "Hamstrings"
-    ) : LowerBodyMuscle // Задняя поверхность бедра
+    }  // Задняя поверхность бедра
 
-    data class ADDUCTORS(
+    object ADDUCTORS : LowerBodyMuscle {
         override val name: String = "Adductors"
-    ) : LowerBodyMuscle // Приводящие мышцы (Внутреннее бедро)
+    } // Приводящие мышцы (Внутреннее бедро)
 
-    data class GASTROCNEMIUS(
+    object GASTROCNEMIUS : LowerBodyMuscle {
         override val name: String = "Gastrocnemius"
-    ) : LowerBodyMuscle // Икроножная мышца (Голень, работает при прямом колене)
+    } // Икроножная мышца (Голень, работает при прямом колене)
 
-    data class SOLEUS(
+    object SOLEUS : LowerBodyMuscle {
         override val name: String = "Soleus"
-    ) : LowerBodyMuscle // Камбаловидная мышца (Голень, работает при согнутом колене)
+    } // Камбаловидная мышца (Голень, работает при согнутом колене)
+
+    object TIBIALIS_ANTERIOR : LowerBodyMuscle {
+        override val name = "Tibialis Anterior"
+    } //Передняя большеберцовая мышца
 }
