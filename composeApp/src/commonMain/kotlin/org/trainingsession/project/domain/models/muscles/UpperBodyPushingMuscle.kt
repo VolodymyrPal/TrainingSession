@@ -1,23 +1,31 @@
 package org.trainingsession.project.domain.models.muscles
 
-sealed interface UpperBodyPushingMuscle : MuscleGroupCategory {
+sealed interface UpperBodyPushingMuscle : MuscleGroup {
 
     val categoryName: String
         get() = "Upper Body Pushing Muscle"
 
-    data class CHEST(
+    object CHEST : UpperBodyPushingMuscle {
         override val name: String = "Chest"
-    ) : UpperBodyPushingMuscle // Грудные мышцы (Большая и Малая)
+    } // Грудные мышцы (Большая и Малая)
 
-    data class DELTOIDS_ANTERIOR_MEDIAL(
+    object DELTOIDS_ANTERIOR_MEDIAL : UpperBodyPushingMuscle {
         override val name: String = "Anterior & Medial Deltoids"
-    ) : UpperBodyPushingMuscle // Дельтовидные (Передний и Средний пучок)
+    } // Дельтовидные (Передний и Средний пучок)
 
-    data class TRICEPS(
+    object TRICEPS : UpperBodyPushingMuscle {
         override val name: String = "Triceps"
-    ) : UpperBodyPushingMuscle // Трицепс
+    } // Трицепс
 
-    data class ROTATOR_CUFF(
+    object ROTATOR_CUFF : UpperBodyPushingMuscle {
         override val name: String = "Rotator Cuff"
-    ) : UpperBodyPushingMuscle // Вращательная манжета (Стабилизаторы плеча)
+    } // Вращательная манжета (Стабилизаторы плеча)
+
+    object SERRATUS_ANTERIOR : UpperBodyPushingMuscle {
+        override val name = "Serratus Anterior"
+    } // Передняя зубчатая мышца
+
+    object CHEST_UPPER : UpperBodyPushingMuscle {
+        override val name = "Upper Chest"
+    } // Верхняя часть груди
 }
