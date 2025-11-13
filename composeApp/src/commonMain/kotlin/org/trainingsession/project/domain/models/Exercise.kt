@@ -1,16 +1,20 @@
 package org.trainingsession.project.domain.models
 
+import org.trainingsession.project.domain.models.muscles.MuscleGroup
 import kotlin.time.Duration
 
-data class ProgramExercise(
+data class Exercise(
     val id: Int,
     val name: String,
     val duration: Duration,
-    val description: String,
-    val primaryFocus: String = "For all body",
+    val description: Description,
     val position: ExercisePosition = ExercisePosition.UNDEFINED,
-    val instruction: ExerciseInstruction
+    val instruction: ExerciseInstruction,
+    val equipment: List<String> = emptyList(),
+    val involvedMuscles: List<MuscleGroup> = emptyList()
 )
+
+value class Description(val value: String)
 
 data class ExerciseInstruction(
     val keyCues: String = "Be quite", // "Ключевые Инструкции" (например, "Плавно шагайте, соблюдая синхронизацию рук и ног.")
