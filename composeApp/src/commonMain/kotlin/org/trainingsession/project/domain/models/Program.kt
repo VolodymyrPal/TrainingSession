@@ -8,7 +8,7 @@ data class Program(
     val id: Int,
     val name: String,
     val description: String,
-    val programExercises: List<ProgramExercise>,
+    val exercises: List<Exercise>,
 
     val exerciseType: String = "Base program",
     val uxRecommendation: String = "Mate it slow",
@@ -25,8 +25,8 @@ fun provideRandomProgram(): Program {
     return providePrograms().random()
 }
 
-fun provideProgramExercise(): ProgramExercise {
-    return provideRandomProgram().programExercises.random()
+fun provideProgramExercise(): Exercise {
+    return provideRandomProgram().exercises.random()
 }
 
 
@@ -39,13 +39,13 @@ val program1 = Program(
     uxRecommendation = "Акцент на плавности движений. Голосовое оповещение о следующем упражнении за 3-5 секунд.",
     durationTotal = 9.minutes,
     restInterval = 10.seconds,
-    programExercises = listOf(
-        ProgramExercise(
+    exercises = listOf(
+        Exercise(
             id = 101, // Уникальный ID
             name = "Марш на месте с подъемом коленей",
             duration = 50.seconds,
-            description = "Общий разогрев, активация тазобедренных суставов.",
-            primaryFocus = "Тазобедренные суставы, Общее кровообращение",
+            description = Description("Общий разогрев, активация тазобедренных суставов."),
+//            primaryFocus = "Тазобедренные суставы, Общее кровообращение",
             position = ExercisePosition.STAY_UP,
             instruction = ExerciseInstruction(
                 keyCues = "Плавно шагайте, соблюдая синхронизацию рук и ног.",
@@ -57,12 +57,12 @@ val program1 = Program(
                 preemptiveCue = "Приготовьтесь к вращению рук."
             )
         ),
-        ProgramExercise(
+        Exercise(
             id = 102, // Уникальный ID
             name = "Вращение рук в плечах",
             duration = 50.seconds,
-            description = "Проработка плечевого пояса и суставной жидкости.",
-            primaryFocus = "Плечевой пояс, Спина",
+            description = Description("Проработка плечевого пояса и суставной жидкости."),
+//            primaryFocus = "Плечевой пояс, Спина",
             position = ExercisePosition.STAY_UP,
             instruction = ExerciseInstruction(
                 keyCues = "25 секунд вперед, 25 секунд назад. Максимальная контролируемая амплитуда.",
@@ -74,12 +74,12 @@ val program1 = Program(
                 preemptiveCue = "Приготовьтесь к динамической растяжке квадрицепса."
             )
         ),
-        ProgramExercise(
+        Exercise(
             id = 103, // Уникальный ID
             name = "Динамическая растяжка квадрицепса",
             duration = 50.seconds,
-            description = "Динамическая активация мышц бедра и сгибателей таза.",
-            primaryFocus = "Квадрицепсы, Сгибатели таза",
+            description = Description("Динамическая активация мышц бедра и сгибателей таза."),
+//            primaryFocus = "Квадрицепсы, Сгибатели таза",
             position = ExercisePosition.STAY_UP,
             instruction = ExerciseInstruction(
                 keyCues = "Чередуйте ноги. Приложите пятку к ягодице, потянитесь свободной рукой вверх.",
@@ -91,12 +91,12 @@ val program1 = Program(
                 preemptiveCue = "Приготовьтесь к наклонам корпуса в стороны."
             )
         ),
-        ProgramExercise(
+        Exercise(
             id = 104, // Уникальный ID
             name = "Наклоны корпуса в стороны (Side bends)",
             duration = 50.seconds,
-            description = "Работа над боковой цепью и межреберными мышцами.",
-            primaryFocus = "Межреберные мышцы, Боковая цепь",
+            description = Description("Работа над боковой цепью и межреберными мышцами."),
+//            primaryFocus = "Межреберные мышцы, Боковая цепь",
             position = ExercisePosition.STAY_UP,
             instruction = ExerciseInstruction(
                 keyCues = "Сохраняйте тело в одной плоскости, избегайте наклона вперед. Руки над головой.",
@@ -108,12 +108,11 @@ val program1 = Program(
                 preemptiveCue = "Аккуратно переходим на пол: Скорпион."
             )
         ),
-        ProgramExercise(
+        Exercise(
             id = 105, // Уникальный ID
             name = "Динамическая ротация 'Скорпион'",
             duration = 50.seconds,
-            description = "Мобилизация грудного отдела и тазобедренных суставов.",
-            primaryFocus = "Грудной отдел позвоночника, Тазобедренные суставы",
+            description = Description("Мобилизация грудного отдела и тазобедренных суставов."),
             position = ExercisePosition.LAY_DOWN,
             instruction = ExerciseInstruction(
                 keyCues = "Поднимите согнутую ногу, тянитесь ею к противоположной руке. Чередуйте стороны.",
@@ -125,12 +124,12 @@ val program1 = Program(
                 preemptiveCue = "Встаем: завершающее упражнение (скрещивание рук)."
             )
         ),
-        ProgramExercise(
+        Exercise(
             id = 106, // Уникальный ID
             name = "Скрещивание рук / Округление спины",
             duration = 50.seconds,
-            description = "Завершающая мобильность грудного отдела и лопаток.",
-            primaryFocus = "Грудной отдел, Лопатки",
+            description = Description("Завершающая мобильность грудного отдела и лопаток."),
+//            primaryFocus = "Грудной отдел, Лопатки",
             position = ExercisePosition.STAY_UP,
             instruction = ExerciseInstruction(
                 keyCues = "Вдох — раскрытие грудной клетки; Выдох — скрещивание рук с округлением спины.",
@@ -154,13 +153,13 @@ val program2 = Program(
     uxRecommendation = "Визуальная индикация нейтрального позвоночника обязательна. Напоминайте 'Пресс напряжен!'",
     durationTotal = 9.minutes,
     restInterval = 10.seconds,
-    programExercises = listOf(
-        ProgramExercise(
+    exercises = listOf(
+        Exercise(
             id = 201, // Уникальный ID
             name = "Ягодичный мостик",
             duration = 50.seconds,
-            description = "Активация ягодиц для стабилизации поясницы.",
-            primaryFocus = "Ягодицы, Стабилизация таза",
+            description = Description("Активация ягодиц для стабилизации поясницы."),
+//            primaryFocus = "Ягодицы, Стабилизация таза",
             position = ExercisePosition.LAY_DOWN,
             instruction = ExerciseInstruction(
                 keyCues = "Напрягайте ягодицы, отталкиваясь пятками. Держите пятки под коленями.",
@@ -172,12 +171,12 @@ val program2 = Program(
                 preemptiveCue = "Переходим на четвереньки: Собака-птица."
             )
         ),
-        ProgramExercise(
+        Exercise(
             id = 202, // Уникальный ID
             name = "Собака-птица",
             duration = 50.seconds,
-            description = "Упражнение на анти-ротацию и глубокий кор.",
-            primaryFocus = "Глубокий кор, Стабилизаторы",
+            description = Description("Упражнение на анти-ротацию и глубокий кор."),
+//            primaryFocus = "Глубокий кор, Стабилизаторы",
             position = ExercisePosition.ON_KNEES,
             instruction = ExerciseInstruction(
                 keyCues = "Вытяните противоположную руку и ногу. При возврате соедините локоть и колено под телом. Пресс напряжен.",
@@ -189,12 +188,12 @@ val program2 = Program(
                 preemptiveCue = "Приготовьтесь к планке на локтях (на коленях)."
             )
         ),
-        ProgramExercise(
+        Exercise(
             id = 203, // Уникальный ID
             name = "Планка на локтях (на коленях)",
             duration = 50.seconds,
-            description = "Удержание положения для общей стабилизации Кора.",
-            primaryFocus = "Общий кор, Мышцы пресса",
+            description = Description("Удержание положения для общей стабилизации Кора."),
+//            primaryFocus = "Общий кор, Мышцы пресса",
             position = ExercisePosition.ON_KNEES,
             instruction = ExerciseInstruction(
                 keyCues = "Спина ровная, не проваливайте таз. Удерживайте положение.",
@@ -206,12 +205,12 @@ val program2 = Program(
                 preemptiveCue = "Переворачиваемся на бок: Боковая планка (Левая)."
             )
         ),
-        ProgramExercise(
+        Exercise(
             id = 204, // Уникальный ID
             name = "Боковая планка на коленях (Левая)",
             duration = 50.seconds,
-            description = "Работа над косыми мышцами и боковой стабилизацией.",
-            primaryFocus = "Косые мышцы, Стабилизаторы бедра",
+            description = Description("Работа над косыми мышцами и боковой стабилизацией."),
+//            primaryFocus = "Косые мышцы, Стабилизаторы бедра",
             position = ExercisePosition.LAY_DOWN,
             instruction = ExerciseInstruction(
                 keyCues = "Опорное колено, поднимите таз. Удерживайте стабильно.",
@@ -223,12 +222,12 @@ val program2 = Program(
                 preemptiveCue = "Переходим на другую сторону: Боковая планка (Правая)."
             )
         ),
-        ProgramExercise(
+        Exercise(
             id = 205, // Уникальный ID
             name = "Боковая планка на коленях (Правая)",
             duration = 50.seconds,
-            description = "Повтор боковой стабилизации на другую сторону.",
-            primaryFocus = "Косые мышцы, Стабилизаторы бедра",
+            description = Description("Повтор боковой стабилизации на другую сторону."),
+//            primaryFocus = "Косые мышцы, Стабилизаторы бедра",
             position = ExercisePosition.LAY_DOWN,
             instruction = ExerciseInstruction(
                 keyCues = "Повтор на другую ногу. Удерживайте стабильно.",
@@ -240,12 +239,12 @@ val program2 = Program(
                 preemptiveCue = "Переворачиваемся на живот: Супермен."
             )
         ),
-        ProgramExercise(
+        Exercise(
             id = 206, // Уникальный ID
             name = "Супермен",
             duration = 50.seconds,
-            description = "Активация разгибателей спины и мышц поясницы.",
-            primaryFocus = "Разгибатели спины, Мышцы поясницы",
+            description = Description("Активация разгибателей спины и мышц поясницы."),
+//            primaryFocus = "Разгибатели спины, Мышцы поясницы",
             position = ExercisePosition.LAY_DOWN,
             instruction = ExerciseInstruction(
                 keyCues = "Контролируемое одновременное поднятие рук, груди и ног.",
@@ -269,13 +268,13 @@ val program3 = Program(
     uxRecommendation = "Используйте позитивное подкрепление в конце ('Кофеин для мозга!').",
     durationTotal = 9.minutes,
     restInterval = 10.seconds,
-    programExercises = listOf(
-        ProgramExercise(
+    exercises = listOf(
+        Exercise(
             id = 301, // Уникальный ID
             name = "Высокий марш с касанием",
             duration = 50.seconds,
-            description = "Легкое кардио, улучшение координации и разогрев сгибателей бедра.",
-            primaryFocus = "Сгибатели бедра, Общее кардио",
+            description = Description("Легкое кардио, улучшение координации и разогрев сгибателей бедра."),
+//            primaryFocus = "Сгибатели бедра, Общее кардио",
             position = ExercisePosition.STAY_UP,
             instruction = ExerciseInstruction(
                 keyCues = "Быстрый, но контролируемый марш, старайтесь коснуться коленом ладони перед грудью.",
@@ -287,12 +286,12 @@ val program3 = Program(
                 preemptiveCue = "Приготовьтесь к полуприседаниям с разведением рук."
             )
         ),
-        ProgramExercise(
+        Exercise(
             id = 302, // Уникальный ID
             name = "Полуприседания с разведением рук",
             duration = 50.seconds,
-            description = "Работа с ногами и синхронизацией дыхания.",
-            primaryFocus = "Квадрицепсы, Ягодицы",
+            description = Description("Работа с ногами и синхронизацией дыхания."),
+//            primaryFocus = "Квадрицепсы, Ягодицы",
             position = ExercisePosition.STAY_UP,
             instruction = ExerciseInstruction(
                 keyCues = "Неглубокие приседания. Синхронизируйте дыхание: вдох на подъеме, выдох на приседании.",
@@ -304,12 +303,12 @@ val program3 = Program(
                 preemptiveCue = "Приготовьтесь к пульсирующим выпадам (Левая нога)."
             )
         ),
-        ProgramExercise(
+        Exercise(
             id = 303, // Уникальный ID
             name = "Выпады с пульсацией (Левая нога)",
             duration = 50.seconds,
-            description = "Улучшение кровообращения в ногах, работа над балансом.",
-            primaryFocus = "Ноги, Баланс",
+            description = Description("Улучшение кровообращения в ногах, работа над балансом."),
+//            primaryFocus = "Ноги, Баланс",
             position = ExercisePosition.STAY_UP,
             instruction = ExerciseInstruction(
                 keyCues = "Выпад вперед, удерживайте колено над стопой. Пульсируйте в нижней точке.",
@@ -321,12 +320,12 @@ val program3 = Program(
                 preemptiveCue = "Приготовьтесь к смене ноги."
             )
         ),
-        ProgramExercise(
+        Exercise(
             id = 304, // Уникальный ID
             name = "Выпады с пульсацией (Правая нога)",
             duration = 50.seconds,
-            description = "Работа с ногами и балансом на другую сторону.",
-            primaryFocus = "Ноги, Баланс",
+            description = Description("Работа с ногами и балансом на другую сторону."),
+//            primaryFocus = "Ноги, Баланс",
             position = ExercisePosition.STAY_UP,
             instruction = ExerciseInstruction(
                 keyCues = "Повтор на другую ногу. Сосредоточьтесь на равновесии.",
@@ -338,12 +337,12 @@ val program3 = Program(
                 preemptiveCue = "Приготовьтесь к круговым движениям тазом."
             )
         ),
-        ProgramExercise(
+        Exercise(
             id = 305, // Уникальный ID
             name = "Круговые движения тазом",
             duration = 50.seconds,
-            description = "Активный отдых и проработка подвижности тазобедренного сустава.",
-            primaryFocus = "Тазобедренные суставы, Активный отдых",
+            description = Description("Активный отдых и проработка подвижности тазобедренного сустава."),
+//            primaryFocus = "Тазобедренные суставы, Активный отдых",
             position = ExercisePosition.STAY_UP,
             instruction = ExerciseInstruction(
                 keyCues = "Широкие, контролируемые круговые движения. 25 секунд по часовой, 25 секунд против.",
@@ -355,12 +354,12 @@ val program3 = Program(
                 preemptiveCue = "Завершающее упражнение: Шаги в сторону."
             )
         ),
-        ProgramExercise(
+        Exercise(
             id = 306, // Уникальный ID
             name = "Шаги в сторону с касанием пола",
             duration = 50.seconds,
-            description = "Завершающий кардио-акцент и латеральная мобильность.",
-            primaryFocus = "Кардио, Латеральные мышцы",
+            description = Description("Завершающий кардио-акцент и латеральная мобильность."),
+//            primaryFocus = "Кардио, Латеральные мышцы",
             position = ExercisePosition.STAY_UP,
             instruction = ExerciseInstruction(
                 keyCues = "Шаг в сторону, касание пола/колена. Движение плавное и ритмичное.",
