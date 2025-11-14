@@ -45,12 +45,12 @@ class WorkoutScreenViewModel(
         viewModelScope.launch {
             val program = repository.getProgram(programId)
 
-            val stepperList: List<AppStepper> =
-                program.toPresentation().exercisePresentations.map { s ->
-                    AppStepper(
-                        durationMS = s.durationSeconds.toLong() * 60,
-                    )
-                }
+            val stepperList = program.toPresentation().exercisePresentations.map {
+                it.copy(
+                    durationSeconds = it.durationSeconds / 10
+                )
+            }
+
 
             _state.update { currentState ->
                 currentState.copy(
