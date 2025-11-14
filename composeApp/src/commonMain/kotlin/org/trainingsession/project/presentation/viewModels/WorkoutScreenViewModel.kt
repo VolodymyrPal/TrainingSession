@@ -1,8 +1,5 @@
 package org.trainingsession.project.presentation.viewModels
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
@@ -17,7 +14,8 @@ import org.koin.android.annotation.KoinViewModel
 import org.koin.core.annotation.InjectedParam
 import org.trainingsession.project.domain.models.Program
 import org.trainingsession.project.domain.repository.ProgramRepository
-import org.trainingsession.project.presentation.composables.Stepper
+import org.trainingsession.project.presentation.models.ExercisePresentation
+import org.trainingsession.project.presentation.models.Stepper
 import org.trainingsession.project.presentation.models.toPresentation
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Duration.Companion.milliseconds
@@ -35,8 +33,8 @@ class WorkoutScreenViewModel(
     private var timerJob: Job? = null
     private val timeSource = TimeSource.Monotonic
 
-    private val _state = MutableStateFlow(ExerciseScreenState())
-    val state: StateFlow<ExerciseScreenState> = _state.asStateFlow()
+    private val _state = MutableStateFlow(ExerciseScreenState<ExercisePresentation>())
+    val state: StateFlow<ExerciseScreenState<ExercisePresentation>> = _state.asStateFlow()
 
 
     init {
@@ -107,7 +105,7 @@ data class ExerciseScreenState<T: Stepper>(
         id = 0,
         description = "",
         name = "",
-        programExercises = emptyList()
+        exercises = emptyList()
     ),
     val currentIndex: Int = 0,
     val isPlaying: Boolean = false,
