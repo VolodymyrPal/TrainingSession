@@ -124,6 +124,27 @@ class WorkoutScreenViewModel(
         }
     }
 
+    private fun pauseTimer() {
+        timerJob?.cancel()
+        timerJob = null
+        if (_state.value.isPlaying) {
+            _state.update { it.copy(isPlaying = false) }
+        }
+    }
+
+    private fun onStepComplete() {
+        _state.update { currentState ->
+            val nextIndex = currentState.currentIndex + 1
+            if (nextIndex >= currentState.stepperList.size) {
+
+                currentState.copy(isPlaying = false)
+            } else {
+
+                currentState.copy(currentIndex = nextIndex)
+            }
+        }
+    }
+
     sealed class SalesPageEvent {
         object PlayPause : SalesPageEvent()
         object NextStep : SalesPageEvent()
@@ -141,6 +162,10 @@ class WorkoutScreenViewModel(
             SalesPageEvent.ResetWorkout -> resetWorkout()
         }
     }
+
+    private fun playPause() {
+        if (_state.value.isPlaying) {
+            pauseTimer()
         } else {
             progressController.startTimer()
         }
