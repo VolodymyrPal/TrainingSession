@@ -167,34 +167,51 @@ class WorkoutScreenViewModel(
         if (_state.value.isPlaying) {
             pauseTimer()
         } else {
-            progressController.startTimer()
+            startTimer()
         }
     }
 
-    fun nextStep() {
-        progressController.pauseTimer()
-        state.value.progressState.next()
+    private fun nextStep() {
+        val state = _state.value
+        if (state.currentIndex < state.stepperList.size - 1) {
+            _state.update { it.copy(currentIndex = it.currentIndex + 1) }
+        }
     }
 
-    fun previousStep() {
-        progressController.pauseTimer()
-        state.value.progressState.previous()
+    private fun previousStep() {
+        if (_state.value.currentIndex > 0) {
+            _state.update { it.copy(currentIndex = it.currentIndex - 1) }
+        }
     }
 
-    fun resetWorkout() {
-        progressController.stopTimer()
+    private fun resetWorkout() {
+        pauseTimer()
+
+        _state.value.stepperList.forEach { stepper ->
+            stepper.elapsedTime.value = 0L
+            stepper.progress.value = 0f
+        }
+
+        _state.update {
+            it.copy(
+                currentIndex = 0,
+                isPlaying = false
+            )
+        }
     }
 
-    fun resetCurrentStep() {
-        progressController.resetCurrentStep()
-    }
-}
+    private fun resetCurrentStep() {
+        pauseTimer()
 
-class AppStepper(
-    override val durationMS: Long = 10L,
-) : Stepper {
-    override val elapsedTime: MutableState<Long> = mutableLongStateOf(0)
-    val progress: MutableState<Float> = mutableFloatStateOf(0f)
+        val state = _state.value
+        val currentStep = state.stepperList[state.currentIndex]
+
+        currentStep.elapsedTime.value = 0L
+        currentStep.progress.value = 0f
+
+        viewModelScope.launch {
+        }
+    }
 }
 
 data class ExerciseScreenState<T: Stepper>(
