@@ -66,7 +66,64 @@ class WorkoutScreenViewModel(
     }
 
     private fun startTimer() {
+        if (_state.value.isPlaying) return
+
+        timerJob?.cancel()
+        _state.update { it.copy(isPlaying = true) }
+
+        timerJob = viewModelScope.launch {
+            try {
+                while (isActive && _state.value.isPlaying) {
+
+                    val stateSnapshot = _state.value
+                    val stepIndex = stateSnapshot.currentIndex
+                    val currentStep = stateSnapshot.stepperList.getOrNull(stepIndex)
+
+                    if (currentStep == null) {
+                        pauseTimer()
+                        break
+                    }
+
+                    val duration = currentStep.durationMS
+
+                    if (duration <= 0L) {
+                        currentStep.progress.value = 1f
+                        onStepComplete()
+                        continue
+                    }
+
+                    val elapsedBefore = currentStep.elapsedTime.value
+
+                    if (elapsedBefore == 0L) {
+                    } else {
+                    }
+
+                    val startTimeMark: TimeMark = timeSource.markNow() - elapsedBefore.milliseconds
+
+                    while (isActive && _state.value.isPlaying && _state.value.currentIndex == stepIndex) {
+                        val newElapsed = startTimeMark.elapsedNow().inWholeMilliseconds
+
+                        if (newElapsed >= duration) {
+                            currentStep.elapsedTime.value = duration
+                            currentStep.progress.value = 1f
+
+                            onStepComplete()
+                        } else {
+                            currentStep.elapsedTime.value = newElapsed
+                            val progress = newElapsed.toFloat() / duration.toFloat()
+                            currentStep.progress.value = progress
+                        }
+
+                        delay(16L)
+                    }
+                }
+            } catch (e: CancellationException) {
+            } catch (e: Exception) {
+                pauseTimer()
+            }
+        }
     }
+
         } else {
             progressController.startTimer()
         }
