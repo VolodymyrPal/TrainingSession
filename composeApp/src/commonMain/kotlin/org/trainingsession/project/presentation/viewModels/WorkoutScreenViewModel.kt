@@ -124,6 +124,23 @@ class WorkoutScreenViewModel(
         }
     }
 
+    sealed class SalesPageEvent {
+        object PlayPause : SalesPageEvent()
+        object NextStep : SalesPageEvent()
+        object PreviousStep : SalesPageEvent()
+        object ResetWorkout : SalesPageEvent()
+        object ResetCurrentStep : SalesPageEvent()
+    }
+
+    fun event(event: WorkoutScreenViewModel.SalesPageEvent) {
+        when (event) {
+            SalesPageEvent.NextStep -> nextStep()
+            SalesPageEvent.PlayPause -> playPause()
+            SalesPageEvent.PreviousStep -> previousStep()
+            SalesPageEvent.ResetCurrentStep -> resetCurrentStep()
+            SalesPageEvent.ResetWorkout -> resetWorkout()
+        }
+    }
         } else {
             progressController.startTimer()
         }
