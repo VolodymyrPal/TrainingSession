@@ -65,9 +65,8 @@ class WorkoutScreenViewModel(
         }
     }
 
-    fun playPause() {
-        if (state.value.progressState.isPlaying) {
-            progressController.pauseTimer()
+    private fun startTimer() {
+    }
         } else {
             progressController.startTimer()
         }
