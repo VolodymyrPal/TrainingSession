@@ -1,0 +1,122 @@
+{
+  "muscle_groups": [
+    {
+      "category_name": "Lower Body Muscle",
+      "muscles": [
+        {
+          "name": "Quadriceps (Квадрицепсы)"
+        },
+        {
+          "name": "Glutes (Ягодичные)"
+        },
+        {
+          "name": "Hamstrings (Бицепсы бедра)"
+        },
+        {
+          "name": "Adductors (Приводящие мышцы)"
+        },
+        {
+          "name": "Hip Flexors (Сгибатели бедра)"
+        },
+        {
+          "name": "Gastrocnemius (Икроножная мышца)"
+        },
+        {
+          "name": "Soleus (Камбаловидная мышца)"
+        },
+        {
+          "name": "Tibialis Anterior (Передняя большеберцовая)"
+        }
+      ]
+    },
+    {
+      "category_name": "Upper Body Pushing Muscle",
+      "muscles": [
+        {
+          "name": "Mid/Lower Chest (Средняя/Нижняя часть груди)"
+        },
+        {
+          "name": "Upper Chest (Верхняя часть груди)"
+        },
+        {
+          "name": "Anterior Deltoid (Передняя дельта)"
+        },
+        {
+          "name": "Medial Deltoid (Средняя дельта)"
+        },
+        {
+          "name": "Triceps (Трицепсы)"
+        },
+        {
+          "name": "Serratus Anterior (Передняя зубчатая мышца)"
+        }
+      ]
+    },
+    {
+      "category_name": "Upper Body Pulling Muscle",
+      "muscles": [
+        {
+          "name": "Latissimus Dorsi (Широчайшие мышцы спины)"
+        },
+        {
+          "name": "Trapezius (Трапециевидные мышцы)"
+        },
+        {
+          "name": "Rhomboids (Ромбовидные мышцы)"
+        },
+        {
+          "name": "Spinal Erectors (Разгибатели позвоночника)"
+        },
+        {
+          "name": "Posterior Deltoid (Задняя дельта)"
+        },
+        {
+          "name": "Biceps (Бицепсы)"
+        }
+      ]
+    },
+    {
+      "category_name": "Core Muscle",
+      "muscles": [
+        {
+          "name": "Rectus Abdominis (Прямая мышца живота)"
+        },
+        {
+          "name": "Obliques (Косые мышцы живота)"
+        },
+        {
+          "name": "Transversus Abdominis (Поперечная мышца живота)"
+        },
+        {
+          "name": "Quadratus Lumborum (Квадратная мышца поясницы)"
+        },
+        {
+          "name": "Pelvic Floor Muscles (Мышцы тазового дна)"
+        },
+        {
+          "name": "Diaphragm (Диафрагма)"
+        },
+        {
+          "name": "Multifidus (Многораздельная мышца)"
+        }
+      ]
+    },
+    {
+      "category_name": "Accessory Muscle & Stabilizers",
+      "muscles": [
+        {
+          "name": "Rotator Cuff (Вращательная манжета плеча)"
+        },
+        {
+          "name": "Neck Muscles (Мышцы шеи)"
+        },
+        {
+          "name": "Forearms Flexors & Extensors (Сгибатели и разгибатели предплечья)"
+        },
+        {
+          "name": "Hand & Grip Muscles (Мышцы кисти и хвата)"
+        }
+      ]
+    }
+  ]
+}
