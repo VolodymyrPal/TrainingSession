@@ -1,122 +1,1034 @@
-{
-  "muscle_groups": [
-    {
-      "category_name": "Lower Body Muscle",
-      "muscles": [
-        {
-          "name": "Quadriceps (Квадрицепсы)"
-        },
-        {
-          "name": "Glutes (Ягодичные)"
-        },
-        {
-          "name": "Hamstrings (Бицепсы бедра)"
-        },
-        {
-          "name": "Adductors (Приводящие мышцы)"
-        },
-        {
-          "name": "Hip Flexors (Сгибатели бедра)"
-        },
-        {
-          "name": "Gastrocnemius (Икроножная мышца)"
-        },
-        {
-          "name": "Soleus (Камбаловидная мышца)"
-        },
-        {
-          "name": "Tibialis Anterior (Передняя большеберцовая)"
-        }
-      ]
-    },
-    {
-      "category_name": "Upper Body Pushing Muscle",
-      "muscles": [
-        {
-          "name": "Mid/Lower Chest (Средняя/Нижняя часть груди)"
-        },
-        {
-          "name": "Upper Chest (Верхняя часть груди)"
-        },
-        {
-          "name": "Anterior Deltoid (Передняя дельта)"
-        },
-        {
-          "name": "Medial Deltoid (Средняя дельта)"
-        },
-        {
-          "name": "Triceps (Трицепсы)"
-        },
-        {
-          "name": "Serratus Anterior (Передняя зубчатая мышца)"
-        }
-      ]
-    },
-    {
-      "category_name": "Upper Body Pulling Muscle",
-      "muscles": [
-        {
-          "name": "Latissimus Dorsi (Широчайшие мышцы спины)"
-        },
-        {
-          "name": "Trapezius (Трапециевидные мышцы)"
-        },
-        {
-          "name": "Rhomboids (Ромбовидные мышцы)"
-        },
-        {
-          "name": "Spinal Erectors (Разгибатели позвоночника)"
-        },
-        {
-          "name": "Posterior Deltoid (Задняя дельта)"
-        },
-        {
-          "name": "Biceps (Бицепсы)"
-        }
-      ]
-    },
-    {
-      "category_name": "Core Muscle",
-      "muscles": [
-        {
-          "name": "Rectus Abdominis (Прямая мышца живота)"
-        },
-        {
-          "name": "Obliques (Косые мышцы живота)"
-        },
-        {
-          "name": "Transversus Abdominis (Поперечная мышца живота)"
-        },
-        {
-          "name": "Quadratus Lumborum (Квадратная мышца поясницы)"
-        },
-        {
-          "name": "Pelvic Floor Muscles (Мышцы тазового дна)"
-        },
-        {
-          "name": "Diaphragm (Диафрагма)"
-        },
-        {
-          "name": "Multifidus (Многораздельная мышца)"
-        }
-      ]
-    },
-    {
-      "category_name": "Accessory Muscle & Stabilizers",
-      "muscles": [
-        {
-          "name": "Rotator Cuff (Вращательная манжета плеча)"
-        },
-        {
-          "name": "Neck Muscles (Мышцы шеи)"
-        },
-        {
-          "name": "Forearms Flexors & Extensors (Сгибатели и разгибатели предплечья)"
-        },
-        {
-          "name": "Hand & Grip Muscles (Мышцы кисти и хвата)"
-        }
-      ]
-    }
-  ]
-}
+[
+  {
+    "category_name": "LOWER_BODY",
+    "muscles": [
+      {
+        "key": "QUADRICEPS_LEFT",
+        "name": "Quadriceps Left (Квадрицепсы, левая)",
+        "muscle_size_type": "LARGE",
+        "recovery_coefficient": 1.4,
+        "supported_actions": [
+          {
+            "action": "SQUAT",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "LUNGE",
+            "plane": null,
+            "role": "PRIMARY"
+          },
+          {
+            "action": "EXTENSION",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "QUADRICEPS_RIGHT",
+        "name": "Quadriceps Right (Квадрицепсы, правая)",
+        "muscle_size_type": "LARGE",
+        "recovery_coefficient": 1.4,
+        "supported_actions": [
+          {
+            "action": "SQUAT",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "LUNGE",
+            "plane": null,
+            "role": "PRIMARY"
+          },
+          {
+            "action": "EXTENSION",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "GLUTES_LEFT",
+        "name": "Glutes Left (Ягодичные, левая)",
+        "muscle_size_type": "LARGE",
+        "recovery_coefficient": 1.4,
+        "supported_actions": [
+          {
+            "action": "HINGE",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "SQUAT",
+            "plane": null,
+            "role": "PRIMARY"
+          },
+          {
+            "action": "ABDUCTION",
+            "plane": "FRONTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "ROTATION",
+            "plane": "TRANSVERSE",
+            "role": "SECONDARY"
+          }
+        ]
+      },
+      {
+        "key": "GLUTES_RIGHT",
+        "name": "Glutes Right (Ягодичные, правая)",
+        "muscle_size_type": "LARGE",
+        "recovery_coefficient": 1.4,
+        "supported_actions": [
+          {
+            "action": "HINGE",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "SQUAT",
+            "plane": null,
+            "role": "PRIMARY"
+          },
+          {
+            "action": "ABDUCTION",
+            "plane": "FRONTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "ROTATION",
+            "plane": "TRANSVERSE",
+            "role": "SECONDARY"
+          }
+        ]
+      },
+      {
+        "key": "HAMSTRINGS_LEFT",
+        "name": "Hamstrings Left (Бицепсы бедра, левая)",
+        "muscle_size_type": "LARGE",
+        "recovery_coefficient": 1.4,
+        "supported_actions": [
+          {
+            "action": "HINGE",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "FLEXION",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "SQUAT",
+            "plane": null,
+            "role": "SECONDARY"
+          }
+        ]
+      },
+      {
+        "key": "HAMSTRINGS_RIGHT",
+        "name": "Hamstrings Right (Бицепсы бедра, правая)",
+        "muscle_size_type": "LARGE",
+        "recovery_coefficient": 1.4,
+        "supported_actions": [
+          {
+            "action": "HINGE",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "FLEXION",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "SQUAT",
+            "plane": null,
+            "role": "SECONDARY"
+          }
+        ]
+      },
+      {
+        "key": "ADDUCTORS_LEFT",
+        "name": "Adductors Left (Приводящие мышцы, левая)",
+        "muscle_size_type": "MEDIUM",
+        "recovery_coefficient": 1.0,
+        "supported_actions": [
+          {
+            "action": "LUNGE",
+            "plane": "FRONTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "SQUAT",
+            "plane": "SAGITTAL",
+            "role": "SECONDARY"
+          },
+          {
+            "action": "STABILIZATION",
+            "plane": null,
+            "role": "SECONDARY"
+          }
+        ]
+      },
+      {
+        "key": "ADDUCTORS_RIGHT",
+        "name": "Adductors Right (Приводящие мышцы, правая)",
+        "muscle_size_type": "MEDIUM",
+        "recovery_coefficient": 1.0,
+        "supported_actions": [
+          {
+            "action": "LUNGE",
+            "plane": "FRONTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "SQUAT",
+            "plane": "SAGITTAL",
+            "role": "SECONDARY"
+          },
+          {
+            "action": "STABILIZATION",
+            "plane": null,
+            "role": "SECONDARY"
+          }
+        ]
+      },
+      {
+        "key": "HIP_FLEXORS_LEFT",
+        "name": "Hip Flexors Left (Сгибатели бедра, левая)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "FLEXION",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "LUNGE",
+            "plane": "SAGITTAL",
+            "role": "SECONDARY"
+          }
+        ]
+      },
+      {
+        "key": "HIP_FLEXORS_RIGHT",
+        "name": "Hip Flexors Right (Сгибатели бедра, правая)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "FLEXION",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "LUNGE",
+            "plane": "SAGITTAL",
+            "role": "SECONDARY"
+          }
+        ]
+      },
+      {
+        "key": "GASTROCNEMIUS_LEFT",
+        "name": "Gastrocnemius Left (Икроножная мышца, левая)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "PUSH",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "GASTROCNEMIUS_RIGHT",
+        "name": "Gastrocnemius Right (Икроножная мышца, правая)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "PUSH",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "SOLEUS_LEFT",
+        "name": "Soleus Left (Камбаловидная мышца, левая)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "PUSH",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "SOLEUS_RIGHT",
+        "name": "Soleus Right (Камбаловидная мышца, правая)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "PUSH",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "TIBIALIS_ANTERIOR_LEFT",
+        "name": "Tibialis Anterior Left (Передняя большеберцовая, левая)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "PULL",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "TIBIALIS_ANTERIOR_RIGHT",
+        "name": "Tibialis Anterior Right (Передняя большеберцовая, правая)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "PULL",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "category_name": "UPPER_PUSH",
+    "muscles": [
+      {
+        "key": "CHEST_LEFT",
+        "name": "Mid/Lower Chest Left (Средняя/Нижняя часть груди, левая)",
+        "muscle_size_type": "MEDIUM",
+        "recovery_coefficient": 1.0,
+        "supported_actions": [
+          {
+            "action": "PUSH",
+            "plane": "HORIZONTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "PUSH",
+            "plane": "VERTICAL",
+            "role": "SECONDARY"
+          }
+        ]
+      },
+      {
+        "key": "CHEST_RIGHT",
+        "name": "Mid/Lower Chest Right (Средняя/Нижняя часть груди, правая)",
+        "muscle_size_type": "MEDIUM",
+        "recovery_coefficient": 1.0,
+        "supported_actions": [
+          {
+            "action": "PUSH",
+            "plane": "HORIZONTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "PUSH",
+            "plane": "VERTICAL",
+            "role": "SECONDARY"
+          }
+        ]
+      },
+      {
+        "key": "CHEST_UPPER_LEFT",
+        "name": "Upper Chest Left (Верхняя часть груди, левая)",
+        "muscle_size_type": "MEDIUM",
+        "recovery_coefficient": 1.0,
+        "supported_actions": [
+          {
+            "action": "PUSH",
+            "plane": "VERTICAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "PUSH",
+            "plane": "HORIZONTAL",
+            "role": "SECONDARY"
+          }
+        ]
+      },
+      {
+        "key": "CHEST_UPPER_RIGHT",
+        "name": "Upper Chest Right (Верхняя часть груди, правая)",
+        "muscle_size_type": "MEDIUM",
+        "recovery_coefficient": 1.0,
+        "supported_actions": [
+          {
+            "action": "PUSH",
+            "plane": "VERTICAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "PUSH",
+            "plane": "HORIZONTAL",
+            "role": "SECONDARY"
+          }
+        ]
+      },
+      {
+        "key": "DELTOIDS_ANTERIOR_LEFT",
+        "name": "Anterior Deltoid Left (Передняя дельта, левая)",
+        "muscle_size_type": "MEDIUM",
+        "recovery_coefficient": 1.0,
+        "supported_actions": [
+          {
+            "action": "PUSH",
+            "plane": "VERTICAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "PUSH",
+            "plane": "HORIZONTAL",
+            "role": "SECONDARY"
+          },
+          {
+            "action": "FLEXION",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "DELTOIDS_ANTERIOR_RIGHT",
+        "name": "Anterior Deltoid Right (Передняя дельта, правая)",
+        "muscle_size_type": "MEDIUM",
+        "recovery_coefficient": 1.0,
+        "supported_actions": [
+          {
+            "action": "PUSH",
+            "plane": "VERTICAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "PUSH",
+            "plane": "HORIZONTAL",
+            "role": "SECONDARY"
+          },
+          {
+            "action": "FLEXION",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "DELTOIDS_MEDIAL_LEFT",
+        "name": "Medial Deltoid Left (Средняя дельта, левая)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "ABDUCTION",
+            "plane": "FRONTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "PUSH",
+            "plane": "VERTICAL",
+            "role": "SECONDARY"
+          }
+        ]
+      },
+      {
+        "key": "DELTOIDS_MEDIAL_RIGHT",
+        "name": "Medial Deltoid Right (Средняя дельта, правая)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "ABDUCTION",
+            "plane": "FRONTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "PUSH",
+            "plane": "VERTICAL",
+            "role": "SECONDARY"
+          }
+        ]
+      },
+      {
+        "key": "TRICEPS_LEFT",
+        "name": "Triceps Left (Трицепсы, левые)",
+        "muscle_size_type": "MEDIUM",
+        "recovery_coefficient": 1.0,
+        "supported_actions": [
+          {
+            "action": "PUSH",
+            "plane": null,
+            "role": "PRIMARY"
+          },
+          {
+            "action": "EXTENSION",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "TRICEPS_RIGHT",
+        "name": "Triceps Right (Трицепсы, правые)",
+        "muscle_size_type": "MEDIUM",
+        "recovery_coefficient": 1.0,
+        "supported_actions": [
+          {
+            "action": "PUSH",
+            "plane": null,
+            "role": "PRIMARY"
+          },
+          {
+            "action": "EXTENSION",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "SERRATUS_ANTERIOR_LEFT",
+        "name": "Serratus Anterior Left (Передняя зубчатая мышца, левая)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "STABILIZATION",
+            "plane": null,
+            "role": "PRIMARY"
+          },
+          {
+            "action": "PUSH",
+            "plane": "HORIZONTAL",
+            "role": "SECONDARY"
+          }
+        ]
+      },
+      {
+        "key": "SERRATUS_ANTERIOR_RIGHT",
+        "name": "Serratus Anterior Right (Передняя зубчатая мышца, правая)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "STABILIZATION",
+            "plane": null,
+            "role": "PRIMARY"
+          },
+          {
+            "action": "PUSH",
+            "plane": "HORIZONTAL",
+            "role": "SECONDARY"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "category_name": "UPPER_PULL",
+    "muscles": [
+      {
+        "key": "BACK_LATS_LEFT",
+        "name": "Latissimus Dorsi Left (Широчайшие мышцы спины, левая)",
+        "muscle_size_type": "LARGE",
+        "recovery_coefficient": 1.4,
+        "supported_actions": [
+          {
+            "action": "PULL",
+            "plane": "VERTICAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "PULL",
+            "plane": "HORIZONTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "EXTENSION",
+            "plane": "SAGITTAL",
+            "role": "SECONDARY"
+          }
+        ]
+      },
+      {
+        "key": "BACK_LATS_RIGHT",
+        "name": "Latissimus Dorsi Right (Широчайшие мышцы спины, правая)",
+        "muscle_size_type": "LARGE",
+        "recovery_coefficient": 1.4,
+        "supported_actions": [
+          {
+            "action": "PULL",
+            "plane": "VERTICAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "PULL",
+            "plane": "HORIZONTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "EXTENSION",
+            "plane": "SAGITTAL",
+            "role": "SECONDARY"
+          }
+        ]
+      },
+      {
+        "key": "TRAPEZIUS",
+        "name": "Trapezius (Трапециевидные мышцы)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "PULL",
+            "plane": "VERTICAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "PULL",
+            "plane": "HORIZONTAL",
+            "role": "SECONDARY"
+          },
+          {
+            "action": "STABILIZATION",
+            "plane": null,
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "RHOMBOIDS_LEFT",
+        "name": "Rhomboids Left (Ромбовидные мышцы, левая)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "PULL",
+            "plane": "HORIZONTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "STABILIZATION",
+            "plane": null,
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "RHOMBOIDS_RIGHT",
+        "name": "Rhomboids Right (Ромбовидные мышцы, правая)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "PULL",
+            "plane": "HORIZONTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "STABILIZATION",
+            "plane": null,
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "SPINAL_ERECTORS",
+        "name": "Spinal Erectors (Разгибатели позвоночника)",
+        "muscle_size_type": "LARGE",
+        "recovery_coefficient": 1.4,
+        "supported_actions": [
+          {
+            "action": "HINGE",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "ANTI_EXTENSION",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "EXTENSION",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "DELTOIDS_POSTERIOR_LEFT",
+        "name": "Posterior Deltoid Left (Задняя дельта, левая)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "PULL",
+            "plane": "HORIZONTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "ABDUCTION",
+            "plane": "HORIZONTAL",
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "DELTOIDS_POSTERIOR_RIGHT",
+        "name": "Posterior Deltoid Right (Задняя дельта, правая)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "PULL",
+            "plane": "HORIZONTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "ABDUCTION",
+            "plane": "HORIZONTAL",
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "BICEPS_LEFT",
+        "name": "Biceps Left (Бицепсы, левые)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "FLEXION",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "PULL",
+            "plane": null,
+            "role": "SECONDARY"
+          }
+        ]
+      },
+      {
+        "key": "BICEPS_RIGHT",
+        "name": "Biceps Right (Бицепсы, правые)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "FLEXION",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "PULL",
+            "plane": null,
+            "role": "SECONDARY"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "category_name": "CORE",
+    "muscles": [
+      {
+        "key": "ABS_RECTUS",
+        "name": "Rectus Abdominis (Прямая мышца живота)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "FLEXION",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "ANTI_EXTENSION",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "ABS_OBLIQUES_LEFT",
+        "name": "Obliques Left (Косые мышцы живота, левые)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "ROTATION",
+            "plane": "TRANSVERSE",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "ANTI_LATERAL_FLEXION",
+            "plane": "FRONTAL",
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "ABS_OBLIQUES_RIGHT",
+        "name": "Obliques Right (Косые мышцы живота, правые)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "ROTATION",
+            "plane": "TRANSVERSE",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "ANTI_LATERAL_FLEXION",
+            "plane": "FRONTAL",
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "ABS_TRANSVERSE",
+        "name": "Transversus Abdominis (Поперечная мышца живота)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "STABILIZATION",
+            "plane": null,
+            "role": "PRIMARY"
+          },
+          {
+            "action": "ANTI_EXTENSION",
+            "plane": "SAGITTAL",
+            "role": "SECONDARY"
+          }
+        ]
+      },
+      {
+        "key": "QUADRATUS_LUMBORUM_LEFT",
+        "name": "Quadratus Lumborum Left (Квадратная мышца поясницы, левая)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "ANTI_LATERAL_FLEXION",
+            "plane": "FRONTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "STABILIZATION",
+            "plane": null,
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "QUADRATUS_LUMBORUM_RIGHT",
+        "name": "Quadratus Lumborum Right (Квадратная мышца поясницы, правая)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "ANTI_LATERAL_FLEXION",
+            "plane": "FRONTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "STABILIZATION",
+            "plane": null,
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "PELVIC_FLOOR",
+        "name": "Pelvic Floor Muscles (Мышцы тазового дна)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "STABILIZATION",
+            "plane": null,
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "DIAPHRAGM",
+        "name": "Diaphragm (Диафрагма)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "STABILIZATION",
+            "plane": null,
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "MULTIFIDUS",
+        "name": "Multifidus (Многораздельная мышца)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "STABILIZATION",
+            "plane": null,
+            "role": "PRIMARY"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "category_name": "ACCESSORY",
+    "muscles": [
+      {
+        "key": "ROTATOR_CUFF_LEFT",
+        "name": "Rotator Cuff Left (Вращательная манжета плеча, левая)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "ROTATION",
+            "plane": null,
+            "role": "PRIMARY"
+          },
+          {
+            "action": "STABILIZATION",
+            "plane": null,
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "ROTATOR_CUFF_RIGHT",
+        "name": "Rotator Cuff Right (Вращательная манжета плеча, правая)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "ROTATION",
+            "plane": null,
+            "role": "PRIMARY"
+          },
+          {
+            "action": "STABILIZATION",
+            "plane": null,
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "NECK",
+        "name": "Neck Muscles (Мышцы шеи)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "FLEXION",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "EXTENSION",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "FOREARMS_FLEXORS_EXTENSORS_LEFT",
+        "name": "Forearms Flexors & Extensors Left (Сгибатели и разгибатели предплечья, левые)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "FLEXION",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "EXTENSION",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "FOREARMS_FLEXORS_EXTENSORS_RIGHT",
+        "name": "Forearms Flexors & Extensors Right (Сгибатели и разгибатели предплечья, правые)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "FLEXION",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          },
+          {
+            "action": "EXTENSION",
+            "plane": "SAGITTAL",
+            "role": "PRIMARY"
+          }
+        ]
+      },
+      {
+        "key": "GRIP_MUSCLES_LEFT",
+        "name": "Hand & Grip Muscles Left (Мышцы кисти и хвата, левые)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "STABILIZATION",
+            "plane": null,
+            "role": "PRIMARY"
+          },
+          {
+            "action": "PULL",
+            "plane": null,
+            "role": "SECONDARY"
+          }
+        ]
+      },
+      {
+        "key": "GRIP_MUSCLES_RIGHT",
+        "name": "Hand & Grip Muscles Right (Мышцы кисти и хвата, правые)",
+        "muscle_size_type": "SMALL",
+        "recovery_coefficient": 0.6,
+        "supported_actions": [
+          {
+            "action": "STABILIZATION",
+            "plane": null,
+            "role": "PRIMARY"
+          },
+          {
+            "action": "PULL",
+            "plane": null,
+            "role": "SECONDARY"
+          }
+        ]
+      }
+    ]
+  }
+]
